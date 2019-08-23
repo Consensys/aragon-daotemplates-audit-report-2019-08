@@ -1,0 +1,835 @@
+digraph G {
+  graph [ ratio = "auto", page = "100", compound =true, bgcolor = "#2e3e56" ];
+  node [ style = "filled", fillcolor = "#edad56", color = "#edad56", penwidth =3 ];
+  edge [ color = "#fcfcfc", penwidth =2, fontname = "helvetica Neue Ultra Light" ];
+subgraph "clusterBaseTemplate" {
+  graph [ label = "BaseTemplate", color = "#445773", fontcolor = "#f0f0f0", style = "rounded", bgcolor = "#445773" ];
+  "BaseTemplate.<Constructor>" [ label = "<Constructor>", color = "#FF9797", fillcolor = "#FF9797" ];
+  "BaseTemplate._createDAO" [ label = "_createDAO", color = "#f2c383", fillcolor = "#f2c383" ];
+  "BaseTemplate._createPermissions" [ label = "_createPermissions", color = "#f2c383", fillcolor = "#f2c383" ];
+  "BaseTemplate._createPermissionForTemplate" [ label = "_createPermissionForTemplate" ];
+  "BaseTemplate._removePermissionFromTemplate" [ label = "_removePermissionFromTemplate", color = "#f2c383", fillcolor = "#f2c383" ];
+  "BaseTemplate._transferRootPermissionsFromTemplateAndFinalizeDAO" [ label = "_transferRootPermissionsFromTemplateAndFinalizeDAO" ];
+  "BaseTemplate._transferPermissionFromTemplate" [ label = "_transferPermissionFromTemplate" ];
+  "BaseTemplate._installDefaultAgentApp" [ label = "_installDefaultAgentApp", color = "#f2c383", fillcolor = "#f2c383" ];
+  "BaseTemplate._installNonDefaultAgentApp" [ label = "_installNonDefaultAgentApp", color = "#f2c383", fillcolor = "#f2c383" ];
+  "BaseTemplate._createAgentPermissions" [ label = "_createAgentPermissions", color = "#f2c383", fillcolor = "#f2c383" ];
+  "BaseTemplate._installVaultApp" [ label = "_installVaultApp", color = "#f2c383", fillcolor = "#f2c383" ];
+  "BaseTemplate._createVaultPermissions" [ label = "_createVaultPermissions", color = "#f2c383", fillcolor = "#f2c383" ];
+  "BaseTemplate._installVotingApp" [ label = "_installVotingApp" ];
+  "BaseTemplate._createVotingPermissions" [ label = "_createVotingPermissions", color = "#f2c383", fillcolor = "#f2c383" ];
+  "BaseTemplate._installSurveyApp" [ label = "_installSurveyApp", color = "#f2c383", fillcolor = "#f2c383" ];
+  "BaseTemplate._createSurveyPermissions" [ label = "_createSurveyPermissions", color = "#f2c383", fillcolor = "#f2c383" ];
+  "BaseTemplate._installPayrollApp" [ label = "_installPayrollApp", color = "#f2c383", fillcolor = "#f2c383" ];
+  "BaseTemplate._createPayrollPermissions" [ label = "_createPayrollPermissions", color = "#f2c383", fillcolor = "#f2c383" ];
+  "BaseTemplate._unwrapPayrollSettings" [ label = "_unwrapPayrollSettings", color = "#f2c383", fillcolor = "#f2c383" ];
+  "BaseTemplate._installFinanceApp" [ label = "_installFinanceApp", color = "#f2c383", fillcolor = "#f2c383" ];
+  "BaseTemplate._createFinancePermissions" [ label = "_createFinancePermissions", color = "#f2c383", fillcolor = "#f2c383" ];
+  "BaseTemplate._installTokenManagerApp" [ label = "_installTokenManagerApp", color = "#f2c383", fillcolor = "#f2c383" ];
+  "BaseTemplate._createTokenManagerPermissions" [ label = "_createTokenManagerPermissions", color = "#f2c383", fillcolor = "#f2c383" ];
+  "BaseTemplate._mintTokens" [ label = "_mintTokens", color = "#f2c383", fillcolor = "#f2c383" ];
+  "BaseTemplate._createEvmScriptsRegistryPermissions" [ label = "_createEvmScriptsRegistryPermissions", color = "#f2c383", fillcolor = "#f2c383" ];
+  "BaseTemplate._installNonDefaultApp" [ label = "_installNonDefaultApp" ];
+  "BaseTemplate._installDefaultApp" [ label = "_installDefaultApp" ];
+  "BaseTemplate._installApp" [ label = "_installApp" ];
+  "BaseTemplate._latestVersionAppBase" [ label = "_latestVersionAppBase" ];
+  "BaseTemplate._createToken" [ label = "_createToken", color = "#f2c383", fillcolor = "#f2c383" ];
+  "BaseTemplate._ensureMiniMeFactoryIsValid" [ label = "_ensureMiniMeFactoryIsValid", color = "#f2c383", fillcolor = "#f2c383" ];
+  "BaseTemplate._registerID" [ label = "_registerID", color = "#f2c383", fillcolor = "#f2c383" ];
+  "BaseTemplate._ensureAragonIdIsValid" [ label = "_ensureAragonIdIsValid", color = "#f2c383", fillcolor = "#f2c383" ];
+  "BaseTemplate._toAddress" [ label = "_toAddress" ];
+  "BaseTemplate.isContract" [ label = "isContract" ];
+}
+
+subgraph "clusterTokenCache" {
+  graph [ label = "TokenCache", color = "#445773", fontcolor = "#f0f0f0", style = "rounded", bgcolor = "#445773" ];
+  "TokenCache._cacheToken" [ label = "_cacheToken", color = "#f2c383", fillcolor = "#f2c383" ];
+  "TokenCache._popTokenCache" [ label = "_popTokenCache", color = "#f2c383", fillcolor = "#f2c383" ];
+}
+
+subgraph "clusterBareTemplate" {
+  graph [ label = "BareTemplate", color = "#445773", fontcolor = "#f0f0f0", style = "rounded", bgcolor = "#445773" ];
+  "BareTemplate.<Constructor>" [ label = "<Constructor>", color = "#FF9797", fillcolor = "#FF9797" ];
+  "BareTemplate.newInstance" [ label = "newInstance" ];
+}
+
+subgraph "clusterCompanyBoardTemplate" {
+  graph [ label = "CompanyBoardTemplate", color = "#445773", fontcolor = "#f0f0f0", style = "rounded", bgcolor = "#445773" ];
+  "CompanyBoardTemplate.<Constructor>" [ label = "<Constructor>", color = "#FF9797", fillcolor = "#FF9797" ];
+  "CompanyBoardTemplate.prepareInstance" [ label = "prepareInstance", color = "#ffbdb9", fillcolor = "#ffbdb9" ];
+  "CompanyBoardTemplate.finalizeInstance" [ label = "finalizeInstance", color = "#ffbdb9", fillcolor = "#ffbdb9" ];
+  "CompanyBoardTemplate._finalizeApps" [ label = "_finalizeApps" ];
+  "CompanyBoardTemplate._setupVaultAndFinanceApps" [ label = "_setupVaultAndFinanceApps" ];
+  "CompanyBoardTemplate._setupPayrollApp" [ label = "_setupPayrollApp" ];
+  "CompanyBoardTemplate._createCustomAgentPermissions" [ label = "_createCustomAgentPermissions" ];
+  "CompanyBoardTemplate._createCustomFinancePermissions" [ label = "_createCustomFinancePermissions" ];
+  "CompanyBoardTemplate._cachePreparedDao" [ label = "_cachePreparedDao" ];
+  "CompanyBoardTemplate._popDaoCache" [ label = "_popDaoCache" ];
+  "CompanyBoardTemplate._popTokenCaches" [ label = "_popTokenCaches" ];
+  "CompanyBoardTemplate._ensureFinalizationSettings" [ label = "_ensureFinalizationSettings" ];
+}
+
+subgraph "clusterCompanyTemplate" {
+  graph [ label = "CompanyTemplate", color = "#445773", fontcolor = "#f0f0f0", style = "rounded", bgcolor = "#445773" ];
+  "CompanyTemplate.<Constructor>" [ label = "<Constructor>", color = "#FF9797", fillcolor = "#FF9797" ];
+  "CompanyTemplate.newTokenAndInstance" [ label = "newTokenAndInstance", color = "#ffbdb9", fillcolor = "#ffbdb9" ];
+  "CompanyTemplate.newToken" [ label = "newToken" ];
+  "CompanyTemplate.newInstance" [ label = "newInstance" ];
+  "CompanyTemplate._setupApps" [ label = "_setupApps" ];
+  "CompanyTemplate._setupPayrollApp" [ label = "_setupPayrollApp" ];
+  "CompanyTemplate._setupPermissions" [ label = "_setupPermissions" ];
+  "CompanyTemplate._ensureCompanySettings" [ label = "_ensureCompanySettings" ];
+  "CompanyTemplate._cacheToken" [ label = "_cacheToken" ];
+  "CompanyTemplate._popTokenCache" [ label = "_popTokenCache" ];
+}
+
+subgraph "clusterMembershipTemplate" {
+  graph [ label = "MembershipTemplate", color = "#445773", fontcolor = "#f0f0f0", style = "rounded", bgcolor = "#445773" ];
+  "MembershipTemplate.<Constructor>" [ label = "<Constructor>", color = "#FF9797", fillcolor = "#FF9797" ];
+  "MembershipTemplate.newTokenAndInstance" [ label = "newTokenAndInstance", color = "#ffbdb9", fillcolor = "#ffbdb9" ];
+  "MembershipTemplate.newToken" [ label = "newToken" ];
+  "MembershipTemplate.newInstance" [ label = "newInstance" ];
+  "MembershipTemplate._setupApps" [ label = "_setupApps" ];
+  "MembershipTemplate._setupPayrollApp" [ label = "_setupPayrollApp" ];
+  "MembershipTemplate._setupPermissions" [ label = "_setupPermissions" ];
+  "MembershipTemplate._ensureMembershipSettings" [ label = "_ensureMembershipSettings" ];
+  "MembershipTemplate._cacheToken" [ label = "_cacheToken" ];
+  "MembershipTemplate._popTokenCache" [ label = "_popTokenCache" ];
+}
+
+subgraph "clusterReputationTemplate" {
+  graph [ label = "ReputationTemplate", color = "#445773", fontcolor = "#f0f0f0", style = "rounded", bgcolor = "#445773" ];
+  "ReputationTemplate.<Constructor>" [ label = "<Constructor>", color = "#FF9797", fillcolor = "#FF9797" ];
+  "ReputationTemplate.newTokenAndInstance" [ label = "newTokenAndInstance", color = "#ffbdb9", fillcolor = "#ffbdb9" ];
+  "ReputationTemplate.newToken" [ label = "newToken" ];
+  "ReputationTemplate.newInstance" [ label = "newInstance" ];
+  "ReputationTemplate._setupApps" [ label = "_setupApps" ];
+  "ReputationTemplate._setupPayrollApp" [ label = "_setupPayrollApp" ];
+  "ReputationTemplate._setupPermissions" [ label = "_setupPermissions" ];
+  "ReputationTemplate._ensureReputationSettings" [ label = "_ensureReputationSettings" ];
+  "ReputationTemplate._cacheToken" [ label = "_cacheToken" ];
+  "ReputationTemplate._popTokenCache" [ label = "_popTokenCache" ];
+}
+
+subgraph "clusterMultiSigWallet" {
+  graph [ label = "MultiSigWallet", color = "#445773", fontcolor = "#f0f0f0", style = "rounded", bgcolor = "#445773" ];
+  "MultiSigWallet.onlyWallet" [ label = "onlyWallet", color = "#1bc6a6", shape =doubleoctagon ];
+  "MultiSigWallet.ownerDoesNotExist" [ label = "ownerDoesNotExist", color = "#1bc6a6", shape =doubleoctagon ];
+  "MultiSigWallet.ownerExists" [ label = "ownerExists", color = "#1bc6a6", shape =doubleoctagon ];
+  "MultiSigWallet.transactionExists" [ label = "transactionExists", color = "#1bc6a6", shape =doubleoctagon ];
+  "MultiSigWallet.confirmed" [ label = "confirmed", color = "#1bc6a6", shape =doubleoctagon ];
+  "MultiSigWallet.notConfirmed" [ label = "notConfirmed", color = "#1bc6a6", shape =doubleoctagon ];
+  "MultiSigWallet.notExecuted" [ label = "notExecuted", color = "#1bc6a6", shape =doubleoctagon ];
+  "MultiSigWallet.notNull" [ label = "notNull", color = "#1bc6a6", shape =doubleoctagon ];
+  "MultiSigWallet.validRequirement" [ label = "validRequirement", color = "#1bc6a6", shape =doubleoctagon ];
+  "MultiSigWallet.<Fallback>" [ label = "<Fallback>", color = "brown", fillcolor = "#FF9797" ];
+  "MultiSigWallet.<Constructor>" [ label = "<Constructor>", color = "#FF9797", fillcolor = "#FF9797" ];
+  "MultiSigWallet.addOwner" [ label = "addOwner", color = "#FF9797", fillcolor = "#FF9797" ];
+  "MultiSigWallet.removeOwner" [ label = "removeOwner", color = "#FF9797", fillcolor = "#FF9797" ];
+  "MultiSigWallet.replaceOwner" [ label = "replaceOwner", color = "#FF9797", fillcolor = "#FF9797" ];
+  "MultiSigWallet.changeRequirement" [ label = "changeRequirement" ];
+  "MultiSigWallet.submitTransaction" [ label = "submitTransaction", color = "#FF9797", fillcolor = "#FF9797" ];
+  "MultiSigWallet.confirmTransaction" [ label = "confirmTransaction" ];
+  "MultiSigWallet.revokeConfirmation" [ label = "revokeConfirmation", color = "#FF9797", fillcolor = "#FF9797" ];
+  "MultiSigWallet.executeTransaction" [ label = "executeTransaction" ];
+  "MultiSigWallet.external_call" [ label = "external_call" ];
+  "MultiSigWallet.isConfirmed" [ label = "isConfirmed" ];
+  "MultiSigWallet.addTransaction" [ label = "addTransaction" ];
+  "MultiSigWallet.getConfirmationCount" [ label = "getConfirmationCount", color = "#FF9797", fillcolor = "#FF9797" ];
+  "MultiSigWallet.getTransactionCount" [ label = "getTransactionCount", color = "#FF9797", fillcolor = "#FF9797" ];
+  "MultiSigWallet.getOwners" [ label = "getOwners", color = "#FF9797", fillcolor = "#FF9797" ];
+  "MultiSigWallet.getConfirmations" [ label = "getConfirmations", color = "#FF9797", fillcolor = "#FF9797" ];
+  "MultiSigWallet.getTransactionIds" [ label = "getTransactionIds", color = "#FF9797", fillcolor = "#FF9797" ];
+}
+
+subgraph "clusterTrustTemplate" {
+  graph [ label = "TrustTemplate", color = "#445773", fontcolor = "#f0f0f0", style = "rounded", bgcolor = "#445773" ];
+  "TrustTemplate.<Constructor>" [ label = "<Constructor>", color = "#FF9797", fillcolor = "#FF9797" ];
+  "TrustTemplate.prepareInstance" [ label = "prepareInstance", color = "#FF9797", fillcolor = "#FF9797" ];
+  "TrustTemplate.setupInstance" [ label = "setupInstance", color = "#FF9797", fillcolor = "#FF9797" ];
+  "TrustTemplate.setupMultiSig" [ label = "setupMultiSig", color = "#FF9797", fillcolor = "#FF9797" ];
+  "TrustTemplate._setupApps" [ label = "_setupApps" ];
+  "TrustTemplate._setupMultiSig" [ label = "_setupMultiSig" ];
+  "TrustTemplate._createMultiSig" [ label = "_createMultiSig" ];
+  "TrustTemplate._installTokenApps" [ label = "_installTokenApps" ];
+  "TrustTemplate._createCustomAgentPermissions" [ label = "_createCustomAgentPermissions" ];
+  "TrustTemplate._createCustomTokenManagerPermissions" [ label = "_createCustomTokenManagerPermissions" ];
+  "TrustTemplate._createCustomVotingPermissions" [ label = "_createCustomVotingPermissions" ];
+  "TrustTemplate._createMultiSigPermissions" [ label = "_createMultiSigPermissions" ];
+  "TrustTemplate._storeDaoCache" [ label = "_storeDaoCache" ];
+  "TrustTemplate._storeAppsCache" [ label = "_storeAppsCache" ];
+  "TrustTemplate._cleanCache" [ label = "_cleanCache" ];
+  "TrustTemplate._hasDaoCache" [ label = "_hasDaoCache" ];
+  "TrustTemplate._hasAppsCache" [ label = "_hasAppsCache" ];
+  "TrustTemplate._getDaoCache" [ label = "_getDaoCache" ];
+  "TrustTemplate._getTokensCache" [ label = "_getTokensCache" ];
+  "TrustTemplate._getAppsCache" [ label = "_getAppsCache" ];
+  "TrustTemplate._calculateBlockedHeirsSupply" [ label = "_calculateBlockedHeirsSupply" ];
+}
+
+subgraph "clusterDAOFactory" {
+  graph [ label = "DAOFactory", color = "#e8726d", fontcolor = "#f0f0f0", style = "rounded,dashed", bgcolor = "#3b4b63" ];
+  "DAOFactory.newDAO" [ label = "newDAO" ];
+}
+
+subgraph "clusterKernel" {
+  graph [ label = "Kernel", color = "#e8726d", fontcolor = "#f0f0f0", style = "rounded,dashed", bgcolor = "#3b4b63" ];
+  "Kernel.acl" [ label = "acl" ];
+  "Kernel.APP_MANAGER_ROLE" [ label = "APP_MANAGER_ROLE" ];
+  "Kernel.setRecoveryVaultAppId" [ label = "setRecoveryVaultAppId" ];
+  "Kernel.newAppInstance" [ label = "newAppInstance" ];
+}
+
+subgraph "clusterACL" {
+  graph [ label = "ACL", color = "#e8726d", fontcolor = "#f0f0f0", style = "rounded,dashed", bgcolor = "#3b4b63" ];
+  "ACL.createPermission" [ label = "createPermission" ];
+  "ACL.grantPermission" [ label = "grantPermission" ];
+  "ACL.revokePermission" [ label = "revokePermission" ];
+  "ACL.setPermissionManager" [ label = "setPermissionManager" ];
+  "ACL.removePermissionManager" [ label = "removePermissionManager" ];
+  "ACL.CREATE_PERMISSIONS_ROLE" [ label = "CREATE_PERMISSIONS_ROLE" ];
+  "ACL.getEVMScriptRegistry" [ label = "getEVMScriptRegistry" ];
+}
+
+subgraph "clusterabi" {
+  graph [ label = "abi", color = "#e8726d", fontcolor = "#f0f0f0", style = "rounded,dashed", bgcolor = "#3b4b63" ];
+  "abi.encodeWithSelector" [ label = "encodeWithSelector" ];
+}
+
+subgraph "clusterAgent" {
+  graph [ label = "Agent", color = "#e8726d", fontcolor = "#f0f0f0", style = "rounded,dashed", bgcolor = "#3b4b63" ];
+  "Agent.EXECUTE_ROLE" [ label = "EXECUTE_ROLE" ];
+  "Agent.RUN_SCRIPT_ROLE" [ label = "RUN_SCRIPT_ROLE" ];
+}
+
+subgraph "clusterVault" {
+  graph [ label = "Vault", color = "#e8726d", fontcolor = "#f0f0f0", style = "rounded,dashed", bgcolor = "#3b4b63" ];
+  "Vault.TRANSFER_ROLE" [ label = "TRANSFER_ROLE" ];
+}
+
+subgraph "clusterVoting" {
+  graph [ label = "Voting", color = "#e8726d", fontcolor = "#f0f0f0", style = "rounded,dashed", bgcolor = "#3b4b63" ];
+  "Voting.MODIFY_QUORUM_ROLE" [ label = "MODIFY_QUORUM_ROLE" ];
+  "Voting.MODIFY_SUPPORT_ROLE" [ label = "MODIFY_SUPPORT_ROLE" ];
+  "Voting.CREATE_VOTES_ROLE" [ label = "CREATE_VOTES_ROLE" ];
+}
+
+subgraph "clusterSurvey" {
+  graph [ label = "Survey", color = "#e8726d", fontcolor = "#f0f0f0", style = "rounded,dashed", bgcolor = "#3b4b63" ];
+  "Survey.CREATE_SURVEYS_ROLE" [ label = "CREATE_SURVEYS_ROLE" ];
+  "Survey.MODIFY_PARTICIPATION_ROLE" [ label = "MODIFY_PARTICIPATION_ROLE" ];
+}
+
+subgraph "clusterPayroll" {
+  graph [ label = "Payroll", color = "#e8726d", fontcolor = "#f0f0f0", style = "rounded,dashed", bgcolor = "#3b4b63" ];
+  "Payroll.ADD_BONUS_ROLE" [ label = "ADD_BONUS_ROLE" ];
+  "Payroll.ADD_EMPLOYEE_ROLE" [ label = "ADD_EMPLOYEE_ROLE" ];
+  "Payroll.ADD_REIMBURSEMENT_ROLE" [ label = "ADD_REIMBURSEMENT_ROLE" ];
+  "Payroll.TERMINATE_EMPLOYEE_ROLE" [ label = "TERMINATE_EMPLOYEE_ROLE" ];
+  "Payroll.SET_EMPLOYEE_SALARY_ROLE" [ label = "SET_EMPLOYEE_SALARY_ROLE" ];
+  "Payroll.MODIFY_PRICE_FEED_ROLE" [ label = "MODIFY_PRICE_FEED_ROLE" ];
+  "Payroll.MODIFY_RATE_EXPIRY_ROLE" [ label = "MODIFY_RATE_EXPIRY_ROLE" ];
+  "Payroll.MANAGE_ALLOWED_TOKENS_ROLE" [ label = "MANAGE_ALLOWED_TOKENS_ROLE" ];
+}
+
+subgraph "clusterFinance" {
+  graph [ label = "Finance", color = "#e8726d", fontcolor = "#f0f0f0", style = "rounded,dashed", bgcolor = "#3b4b63" ];
+  "Finance.CREATE_PAYMENTS_ROLE" [ label = "CREATE_PAYMENTS_ROLE" ];
+  "Finance.EXECUTE_PAYMENTS_ROLE" [ label = "EXECUTE_PAYMENTS_ROLE" ];
+  "Finance.MANAGE_PAYMENTS_ROLE" [ label = "MANAGE_PAYMENTS_ROLE" ];
+}
+
+subgraph "clusterMiniMeToken" {
+  graph [ label = "MiniMeToken", color = "#e8726d", fontcolor = "#f0f0f0", style = "rounded,dashed", bgcolor = "#3b4b63" ];
+  "MiniMeToken.changeController" [ label = "changeController" ];
+}
+
+subgraph "clusterTokenManager" {
+  graph [ label = "TokenManager", color = "#e8726d", fontcolor = "#f0f0f0", style = "rounded,dashed", bgcolor = "#3b4b63" ];
+  "TokenManager.initialize" [ label = "initialize" ];
+  "TokenManager.MINT_ROLE" [ label = "MINT_ROLE" ];
+  "TokenManager.BURN_ROLE" [ label = "BURN_ROLE" ];
+  "TokenManager.mint" [ label = "mint" ];
+  "TokenManager.ASSIGN_ROLE" [ label = "ASSIGN_ROLE" ];
+  "TokenManager.REVOKE_VESTINGS_ROLE" [ label = "REVOKE_VESTINGS_ROLE" ];
+}
+
+subgraph "clusterEVMScriptRegistry" {
+  graph [ label = "EVMScriptRegistry", color = "#e8726d", fontcolor = "#f0f0f0", style = "rounded,dashed", bgcolor = "#3b4b63" ];
+  "EVMScriptRegistry.REGISTRY_MANAGER_ROLE" [ label = "REGISTRY_MANAGER_ROLE" ];
+  "EVMScriptRegistry.REGISTRY_ADD_EXECUTOR_ROLE" [ label = "REGISTRY_ADD_EXECUTOR_ROLE" ];
+}
+
+subgraph "clusterPublicResolver" {
+  graph [ label = "PublicResolver", color = "#e8726d", fontcolor = "#f0f0f0", style = "rounded,dashed", bgcolor = "#3b4b63" ];
+  "PublicResolver.addr" [ label = "addr" ];
+}
+
+subgraph "clusterENS" {
+  graph [ label = "ENS", color = "#e8726d", fontcolor = "#f0f0f0", style = "rounded,dashed", bgcolor = "#3b4b63" ];
+  "ENS.resolver" [ label = "resolver" ];
+}
+
+subgraph "clusterRepo" {
+  graph [ label = "Repo", color = "#e8726d", fontcolor = "#f0f0f0", style = "rounded,dashed", bgcolor = "#3b4b63" ];
+  "Repo.getLatest" [ label = "getLatest" ];
+}
+
+subgraph "clusterMiniMeTokenFactory" {
+  graph [ label = "MiniMeTokenFactory", color = "#e8726d", fontcolor = "#f0f0f0", style = "rounded,dashed", bgcolor = "#3b4b63" ];
+  "MiniMeTokenFactory.createCloneToken" [ label = "createCloneToken" ];
+}
+
+subgraph "clusterIFIFSResolvingRegistrar" {
+  graph [ label = "IFIFSResolvingRegistrar", color = "#e8726d", fontcolor = "#f0f0f0", style = "rounded,dashed", bgcolor = "#3b4b63" ];
+  "IFIFSResolvingRegistrar.register" [ label = "register" ];
+}
+
+subgraph "clustertotalHeirsSupply" {
+  graph [ label = "totalHeirsSupply", color = "#e8726d", fontcolor = "#f0f0f0", style = "rounded,dashed", bgcolor = "#3b4b63" ];
+  "totalHeirsSupply.add" [ label = "add" ];
+  "totalHeirsSupply.mul" [ label = "mul" ];
+}
+
+subgraph "clustertotalSupply" {
+  graph [ label = "totalSupply", color = "#e8726d", fontcolor = "#f0f0f0", style = "rounded,dashed", bgcolor = "#3b4b63" ];
+  "totalSupply.sub" [ label = "sub" ];
+}
+
+  "BaseTemplate.null";
+  "BaseTemplate.isContract";
+  "BaseTemplate._createDAO";
+  "DAOFactory.newDAO";
+  "Kernel.acl";
+  "BaseTemplate._createPermissionForTemplate";
+  "Kernel.APP_MANAGER_ROLE";
+  "BaseTemplate._createPermissions";
+  "ACL.createPermission";
+  "ACL.grantPermission";
+  "ACL.revokePermission";
+  "ACL.setPermissionManager";
+  "BaseTemplate._removePermissionFromTemplate";
+  "ACL.removePermissionManager";
+  "BaseTemplate._transferRootPermissionsFromTemplateAndFinalizeDAO";
+  "BaseTemplate._transferPermissionFromTemplate";
+  "ACL.CREATE_PERMISSIONS_ROLE";
+  "BaseTemplate._installDefaultAgentApp";
+  "abi.encodeWithSelector";
+  "BaseTemplate._installDefaultApp";
+  "Kernel.setRecoveryVaultAppId";
+  "BaseTemplate._installNonDefaultAgentApp";
+  "BaseTemplate._installNonDefaultApp";
+  "BaseTemplate._createAgentPermissions";
+  "Agent.EXECUTE_ROLE";
+  "Agent.RUN_SCRIPT_ROLE";
+  "BaseTemplate._installVaultApp";
+  "BaseTemplate._createVaultPermissions";
+  "Vault.TRANSFER_ROLE";
+  "BaseTemplate._installVotingApp";
+  "BaseTemplate._createVotingPermissions";
+  "Voting.MODIFY_QUORUM_ROLE";
+  "Voting.MODIFY_SUPPORT_ROLE";
+  "Voting.CREATE_VOTES_ROLE";
+  "BaseTemplate._installSurveyApp";
+  "BaseTemplate._createSurveyPermissions";
+  "Survey.CREATE_SURVEYS_ROLE";
+  "Survey.MODIFY_PARTICIPATION_ROLE";
+  "BaseTemplate._installPayrollApp";
+  "BaseTemplate._createPayrollPermissions";
+  "Payroll.ADD_BONUS_ROLE";
+  "Payroll.ADD_EMPLOYEE_ROLE";
+  "Payroll.ADD_REIMBURSEMENT_ROLE";
+  "Payroll.TERMINATE_EMPLOYEE_ROLE";
+  "Payroll.SET_EMPLOYEE_SALARY_ROLE";
+  "Payroll.MODIFY_PRICE_FEED_ROLE";
+  "Payroll.MODIFY_RATE_EXPIRY_ROLE";
+  "Payroll.MANAGE_ALLOWED_TOKENS_ROLE";
+  "BaseTemplate._unwrapPayrollSettings";
+  "BaseTemplate._toAddress";
+  "BaseTemplate._installFinanceApp";
+  "BaseTemplate._createFinancePermissions";
+  "Finance.CREATE_PAYMENTS_ROLE";
+  "Finance.EXECUTE_PAYMENTS_ROLE";
+  "Finance.MANAGE_PAYMENTS_ROLE";
+  "BaseTemplate._installTokenManagerApp";
+  "MiniMeToken.changeController";
+  "TokenManager.initialize";
+  "BaseTemplate._createTokenManagerPermissions";
+  "TokenManager.MINT_ROLE";
+  "TokenManager.BURN_ROLE";
+  "BaseTemplate._mintTokens";
+  "TokenManager.mint";
+  "BaseTemplate._createEvmScriptsRegistryPermissions";
+  "ACL.getEVMScriptRegistry";
+  "EVMScriptRegistry.REGISTRY_MANAGER_ROLE";
+  "EVMScriptRegistry.REGISTRY_ADD_EXECUTOR_ROLE";
+  "BaseTemplate._installApp";
+  "BaseTemplate._latestVersionAppBase";
+  "Kernel.newAppInstance";
+  "PublicResolver.addr";
+  "ENS.resolver";
+  "Repo.getLatest";
+  "BaseTemplate._createToken";
+  "MiniMeTokenFactory.createCloneToken";
+  "BaseTemplate._ensureMiniMeFactoryIsValid";
+  "BaseTemplate._registerID";
+  "IFIFSResolvingRegistrar.register";
+  "BaseTemplate._ensureAragonIdIsValid";
+  "BareTemplate.newInstance";
+  "CompanyBoardTemplate.prepareInstance";
+  "CompanyBoardTemplate._cachePreparedDao";
+  "CompanyBoardTemplate.finalizeInstance";
+  "CompanyBoardTemplate._ensureFinalizationSettings";
+  "CompanyBoardTemplate._popDaoCache";
+  "CompanyBoardTemplate._setupVaultAndFinanceApps";
+  "CompanyBoardTemplate._finalizeApps";
+  "CompanyBoardTemplate._setupPayrollApp";
+  "CompanyBoardTemplate._popTokenCaches";
+  "CompanyBoardTemplate._createCustomAgentPermissions";
+  "CompanyBoardTemplate._createCustomFinancePermissions";
+  "CompanyTemplate.newTokenAndInstance";
+  "CompanyTemplate.newToken";
+  "CompanyTemplate.newInstance";
+  "CompanyTemplate._cacheToken";
+  "CompanyTemplate._ensureCompanySettings";
+  "CompanyTemplate._setupApps";
+  "CompanyTemplate._setupPayrollApp";
+  "CompanyTemplate._popTokenCache";
+  "CompanyTemplate._setupPermissions";
+  "MembershipTemplate.newTokenAndInstance";
+  "MembershipTemplate.newToken";
+  "MembershipTemplate.newInstance";
+  "MembershipTemplate._cacheToken";
+  "MembershipTemplate._ensureMembershipSettings";
+  "MembershipTemplate._setupApps";
+  "MembershipTemplate._setupPayrollApp";
+  "MembershipTemplate._popTokenCache";
+  "MembershipTemplate._setupPermissions";
+  "ReputationTemplate.newTokenAndInstance";
+  "ReputationTemplate.newToken";
+  "ReputationTemplate.newInstance";
+  "ReputationTemplate._cacheToken";
+  "ReputationTemplate._ensureReputationSettings";
+  "ReputationTemplate._setupApps";
+  "ReputationTemplate._setupPayrollApp";
+  "ReputationTemplate._popTokenCache";
+  "ReputationTemplate._setupPermissions";
+  "MultiSigWallet.removeOwner";
+  "MultiSigWallet.changeRequirement";
+  "MultiSigWallet.submitTransaction";
+  "MultiSigWallet.addTransaction";
+  "MultiSigWallet.confirmTransaction";
+  "MultiSigWallet.executeTransaction";
+  "MultiSigWallet.isConfirmed";
+  "MultiSigWallet.external_call";
+  "TrustTemplate.prepareInstance";
+  "TrustTemplate._storeDaoCache";
+  "TrustTemplate.setupInstance";
+  "TrustTemplate._hasDaoCache";
+  "TrustTemplate._calculateBlockedHeirsSupply";
+  "TrustTemplate._getDaoCache";
+  "TrustTemplate._setupApps";
+  "TrustTemplate.setupMultiSig";
+  "TrustTemplate._hasAppsCache";
+  "TrustTemplate._setupMultiSig";
+  "TrustTemplate._installTokenApps";
+  "TrustTemplate._createCustomAgentPermissions";
+  "TrustTemplate._createCustomVotingPermissions";
+  "TrustTemplate._createCustomTokenManagerPermissions";
+  "TrustTemplate._storeAppsCache";
+  "TrustTemplate._getAppsCache";
+  "TrustTemplate._createMultiSig";
+  "TrustTemplate._createMultiSigPermissions";
+  "TrustTemplate._cleanCache";
+  "TrustTemplate._getTokensCache";
+  "TokenManager.ASSIGN_ROLE";
+  "TokenManager.REVOKE_VESTINGS_ROLE";
+  "totalHeirsSupply.add";
+  "totalHeirsSupply.mul";
+  "totalSupply.sub";
+  "BaseTemplate.null" -> "BaseTemplate.isContract" [ color = "#1bc6a6" ];
+  "BaseTemplate.null" -> "BaseTemplate.isContract" [ color = "#1bc6a6" ];
+  "BaseTemplate._createDAO" -> "DAOFactory.newDAO" [ color = "white" ];
+  "BaseTemplate._createDAO" -> "Kernel.acl" [ color = "white" ];
+  "BaseTemplate._createDAO" -> "BaseTemplate._createPermissionForTemplate" [ color = "#1bc6a6" ];
+  "BaseTemplate._createDAO" -> "Kernel.APP_MANAGER_ROLE" [ color = "white" ];
+  "BaseTemplate._createPermissions" -> "ACL.createPermission" [ color = "white" ];
+  "BaseTemplate._createPermissions" -> "ACL.grantPermission" [ color = "white" ];
+  "BaseTemplate._createPermissions" -> "ACL.revokePermission" [ color = "white" ];
+  "BaseTemplate._createPermissions" -> "ACL.setPermissionManager" [ color = "white" ];
+  "BaseTemplate._createPermissionForTemplate" -> "ACL.createPermission" [ color = "white" ];
+  "BaseTemplate._removePermissionFromTemplate" -> "ACL.revokePermission" [ color = "white" ];
+  "BaseTemplate._removePermissionFromTemplate" -> "ACL.removePermissionManager" [ color = "white" ];
+  "BaseTemplate._transferRootPermissionsFromTemplateAndFinalizeDAO" -> "BaseTemplate._transferRootPermissionsFromTemplateAndFinalizeDAO" [ color = "#1bc6a6" ];
+  "BaseTemplate._transferRootPermissionsFromTemplateAndFinalizeDAO" -> "Kernel.acl" [ color = "white" ];
+  "BaseTemplate._transferRootPermissionsFromTemplateAndFinalizeDAO" -> "BaseTemplate._transferPermissionFromTemplate" [ color = "#1bc6a6" ];
+  "BaseTemplate._transferRootPermissionsFromTemplateAndFinalizeDAO" -> "Kernel.APP_MANAGER_ROLE" [ color = "white" ];
+  "BaseTemplate._transferRootPermissionsFromTemplateAndFinalizeDAO" -> "BaseTemplate._transferPermissionFromTemplate" [ color = "#1bc6a6" ];
+  "BaseTemplate._transferRootPermissionsFromTemplateAndFinalizeDAO" -> "ACL.CREATE_PERMISSIONS_ROLE" [ color = "white" ];
+  "BaseTemplate._transferPermissionFromTemplate" -> "ACL.grantPermission" [ color = "white" ];
+  "BaseTemplate._transferPermissionFromTemplate" -> "ACL.revokePermission" [ color = "white" ];
+  "BaseTemplate._transferPermissionFromTemplate" -> "ACL.setPermissionManager" [ color = "white" ];
+  "BaseTemplate._installDefaultAgentApp" -> "abi.encodeWithSelector" [ color = "white" ];
+  "BaseTemplate._installDefaultAgentApp" -> "BaseTemplate._installDefaultApp" [ color = "#1bc6a6" ];
+  "BaseTemplate._installDefaultAgentApp" -> "Kernel.setRecoveryVaultAppId" [ color = "white" ];
+  "BaseTemplate._installNonDefaultAgentApp" -> "abi.encodeWithSelector" [ color = "white" ];
+  "BaseTemplate._installNonDefaultAgentApp" -> "BaseTemplate._installNonDefaultApp" [ color = "#1bc6a6" ];
+  "BaseTemplate._createAgentPermissions" -> "ACL.createPermission" [ color = "white" ];
+  "BaseTemplate._createAgentPermissions" -> "Agent.EXECUTE_ROLE" [ color = "white" ];
+  "BaseTemplate._createAgentPermissions" -> "ACL.createPermission" [ color = "white" ];
+  "BaseTemplate._createAgentPermissions" -> "Agent.RUN_SCRIPT_ROLE" [ color = "white" ];
+  "BaseTemplate._installVaultApp" -> "abi.encodeWithSelector" [ color = "white" ];
+  "BaseTemplate._installVaultApp" -> "BaseTemplate._installDefaultApp" [ color = "#1bc6a6" ];
+  "BaseTemplate._createVaultPermissions" -> "ACL.createPermission" [ color = "white" ];
+  "BaseTemplate._createVaultPermissions" -> "Vault.TRANSFER_ROLE" [ color = "white" ];
+  "BaseTemplate._installVotingApp" -> "BaseTemplate._installVotingApp" [ color = "#1bc6a6" ];
+  "BaseTemplate._installVotingApp" -> "abi.encodeWithSelector" [ color = "white" ];
+  "BaseTemplate._installVotingApp" -> "BaseTemplate._installNonDefaultApp" [ color = "#1bc6a6" ];
+  "BaseTemplate._createVotingPermissions" -> "ACL.createPermission" [ color = "white" ];
+  "BaseTemplate._createVotingPermissions" -> "Voting.MODIFY_QUORUM_ROLE" [ color = "white" ];
+  "BaseTemplate._createVotingPermissions" -> "ACL.createPermission" [ color = "white" ];
+  "BaseTemplate._createVotingPermissions" -> "Voting.MODIFY_SUPPORT_ROLE" [ color = "white" ];
+  "BaseTemplate._createVotingPermissions" -> "ACL.createPermission" [ color = "white" ];
+  "BaseTemplate._createVotingPermissions" -> "Voting.CREATE_VOTES_ROLE" [ color = "white" ];
+  "BaseTemplate._installSurveyApp" -> "abi.encodeWithSelector" [ color = "white" ];
+  "BaseTemplate._installSurveyApp" -> "BaseTemplate._installNonDefaultApp" [ color = "#1bc6a6" ];
+  "BaseTemplate._createSurveyPermissions" -> "ACL.createPermission" [ color = "white" ];
+  "BaseTemplate._createSurveyPermissions" -> "Survey.CREATE_SURVEYS_ROLE" [ color = "white" ];
+  "BaseTemplate._createSurveyPermissions" -> "ACL.createPermission" [ color = "white" ];
+  "BaseTemplate._createSurveyPermissions" -> "Survey.MODIFY_PARTICIPATION_ROLE" [ color = "white" ];
+  "BaseTemplate._installPayrollApp" -> "abi.encodeWithSelector" [ color = "white" ];
+  "BaseTemplate._installPayrollApp" -> "BaseTemplate._installNonDefaultApp" [ color = "#1bc6a6" ];
+  "BaseTemplate._createPayrollPermissions" -> "ACL.createPermission" [ color = "white" ];
+  "BaseTemplate._createPayrollPermissions" -> "Payroll.ADD_BONUS_ROLE" [ color = "white" ];
+  "BaseTemplate._createPayrollPermissions" -> "ACL.createPermission" [ color = "white" ];
+  "BaseTemplate._createPayrollPermissions" -> "Payroll.ADD_EMPLOYEE_ROLE" [ color = "white" ];
+  "BaseTemplate._createPayrollPermissions" -> "ACL.createPermission" [ color = "white" ];
+  "BaseTemplate._createPayrollPermissions" -> "Payroll.ADD_REIMBURSEMENT_ROLE" [ color = "white" ];
+  "BaseTemplate._createPayrollPermissions" -> "ACL.createPermission" [ color = "white" ];
+  "BaseTemplate._createPayrollPermissions" -> "Payroll.TERMINATE_EMPLOYEE_ROLE" [ color = "white" ];
+  "BaseTemplate._createPayrollPermissions" -> "ACL.createPermission" [ color = "white" ];
+  "BaseTemplate._createPayrollPermissions" -> "Payroll.SET_EMPLOYEE_SALARY_ROLE" [ color = "white" ];
+  "BaseTemplate._createPayrollPermissions" -> "ACL.createPermission" [ color = "white" ];
+  "BaseTemplate._createPayrollPermissions" -> "Payroll.MODIFY_PRICE_FEED_ROLE" [ color = "white" ];
+  "BaseTemplate._createPayrollPermissions" -> "ACL.createPermission" [ color = "white" ];
+  "BaseTemplate._createPayrollPermissions" -> "Payroll.MODIFY_RATE_EXPIRY_ROLE" [ color = "white" ];
+  "BaseTemplate._createPayrollPermissions" -> "ACL.createPermission" [ color = "white" ];
+  "BaseTemplate._createPayrollPermissions" -> "Payroll.MANAGE_ALLOWED_TOKENS_ROLE" [ color = "white" ];
+  "BaseTemplate._unwrapPayrollSettings" -> "BaseTemplate._toAddress" [ color = "#1bc6a6" ];
+  "BaseTemplate._unwrapPayrollSettings" -> "BaseTemplate._toAddress" [ color = "#1bc6a6" ];
+  "BaseTemplate._unwrapPayrollSettings" -> "BaseTemplate._toAddress" [ color = "#1bc6a6" ];
+  "BaseTemplate._installFinanceApp" -> "abi.encodeWithSelector" [ color = "white" ];
+  "BaseTemplate._installFinanceApp" -> "BaseTemplate._installNonDefaultApp" [ color = "#1bc6a6" ];
+  "BaseTemplate._createFinancePermissions" -> "ACL.createPermission" [ color = "white" ];
+  "BaseTemplate._createFinancePermissions" -> "Finance.CREATE_PAYMENTS_ROLE" [ color = "white" ];
+  "BaseTemplate._createFinancePermissions" -> "ACL.createPermission" [ color = "white" ];
+  "BaseTemplate._createFinancePermissions" -> "Finance.EXECUTE_PAYMENTS_ROLE" [ color = "white" ];
+  "BaseTemplate._createFinancePermissions" -> "ACL.createPermission" [ color = "white" ];
+  "BaseTemplate._createFinancePermissions" -> "Finance.MANAGE_PAYMENTS_ROLE" [ color = "white" ];
+  "BaseTemplate._installTokenManagerApp" -> "BaseTemplate._installNonDefaultApp" [ color = "#1bc6a6" ];
+  "BaseTemplate._installTokenManagerApp" -> "MiniMeToken.changeController" [ color = "white" ];
+  "BaseTemplate._installTokenManagerApp" -> "TokenManager.initialize" [ color = "white" ];
+  "BaseTemplate._createTokenManagerPermissions" -> "ACL.createPermission" [ color = "white" ];
+  "BaseTemplate._createTokenManagerPermissions" -> "TokenManager.MINT_ROLE" [ color = "white" ];
+  "BaseTemplate._createTokenManagerPermissions" -> "ACL.createPermission" [ color = "white" ];
+  "BaseTemplate._createTokenManagerPermissions" -> "TokenManager.BURN_ROLE" [ color = "white" ];
+  "BaseTemplate._mintTokens" -> "BaseTemplate._createPermissionForTemplate" [ color = "#1bc6a6" ];
+  "BaseTemplate._mintTokens" -> "TokenManager.MINT_ROLE" [ color = "white" ];
+  "BaseTemplate._mintTokens" -> "TokenManager.mint" [ color = "white" ];
+  "BaseTemplate._mintTokens" -> "BaseTemplate._removePermissionFromTemplate" [ color = "#1bc6a6" ];
+  "BaseTemplate._mintTokens" -> "TokenManager.MINT_ROLE" [ color = "white" ];
+  "BaseTemplate._mintTokens" -> "BaseTemplate._createPermissionForTemplate" [ color = "#1bc6a6" ];
+  "BaseTemplate._mintTokens" -> "TokenManager.MINT_ROLE" [ color = "white" ];
+  "BaseTemplate._mintTokens" -> "TokenManager.mint" [ color = "white" ];
+  "BaseTemplate._mintTokens" -> "BaseTemplate._removePermissionFromTemplate" [ color = "#1bc6a6" ];
+  "BaseTemplate._mintTokens" -> "TokenManager.MINT_ROLE" [ color = "white" ];
+  "BaseTemplate._mintTokens" -> "BaseTemplate._createPermissionForTemplate" [ color = "#1bc6a6" ];
+  "BaseTemplate._mintTokens" -> "TokenManager.MINT_ROLE" [ color = "white" ];
+  "BaseTemplate._mintTokens" -> "TokenManager.mint" [ color = "white" ];
+  "BaseTemplate._mintTokens" -> "BaseTemplate._removePermissionFromTemplate" [ color = "#1bc6a6" ];
+  "BaseTemplate._mintTokens" -> "TokenManager.MINT_ROLE" [ color = "white" ];
+  "BaseTemplate._createEvmScriptsRegistryPermissions" -> "ACL.getEVMScriptRegistry" [ color = "white" ];
+  "BaseTemplate._createEvmScriptsRegistryPermissions" -> "ACL.createPermission" [ color = "white" ];
+  "BaseTemplate._createEvmScriptsRegistryPermissions" -> "EVMScriptRegistry.REGISTRY_MANAGER_ROLE" [ color = "white" ];
+  "BaseTemplate._createEvmScriptsRegistryPermissions" -> "ACL.createPermission" [ color = "white" ];
+  "BaseTemplate._createEvmScriptsRegistryPermissions" -> "EVMScriptRegistry.REGISTRY_ADD_EXECUTOR_ROLE" [ color = "white" ];
+  "BaseTemplate._installNonDefaultApp" -> "BaseTemplate._installNonDefaultApp" [ color = "#1bc6a6" ];
+  "BaseTemplate._installNonDefaultApp" -> "BaseTemplate._installApp" [ color = "#1bc6a6" ];
+  "BaseTemplate._installDefaultApp" -> "BaseTemplate._installDefaultApp" [ color = "#1bc6a6" ];
+  "BaseTemplate._installDefaultApp" -> "BaseTemplate._installApp" [ color = "#1bc6a6" ];
+  "BaseTemplate._installApp" -> "BaseTemplate._latestVersionAppBase" [ color = "#1bc6a6" ];
+  "BaseTemplate._installApp" -> "Kernel.newAppInstance" [ color = "white" ];
+  "BaseTemplate._latestVersionAppBase" -> "PublicResolver.addr" [ color = "white" ];
+  "BaseTemplate._latestVersionAppBase" -> "ENS.resolver" [ color = "white" ];
+  "BaseTemplate._latestVersionAppBase" -> "Repo.getLatest" [ color = "white" ];
+  "BaseTemplate._createToken" -> "MiniMeTokenFactory.createCloneToken" [ color = "white" ];
+  "BaseTemplate._ensureMiniMeFactoryIsValid" -> "BaseTemplate.isContract" [ color = "#1bc6a6" ];
+  "BaseTemplate._registerID" -> "IFIFSResolvingRegistrar.register" [ color = "white" ];
+  "BaseTemplate._ensureAragonIdIsValid" -> "BaseTemplate.isContract" [ color = "#1bc6a6" ];
+  "BareTemplate.newInstance" -> "BareTemplate.newInstance" [ color = "#1bc6a6" ];
+  "BareTemplate.newInstance" -> "BaseTemplate._createDAO" [ color = "#1bc6a6" ];
+  "BareTemplate.newInstance" -> "BaseTemplate._installApp" [ color = "#1bc6a6" ];
+  "BareTemplate.newInstance" -> "ACL.createPermission" [ color = "white" ];
+  "BareTemplate.newInstance" -> "BaseTemplate._transferRootPermissionsFromTemplateAndFinalizeDAO" [ color = "#1bc6a6" ];
+  "BaseTemplate.null" -> "BaseTemplate._ensureAragonIdIsValid" [ color = "#1bc6a6" ];
+  "BaseTemplate.null" -> "BaseTemplate._ensureMiniMeFactoryIsValid" [ color = "#1bc6a6" ];
+  "CompanyBoardTemplate.prepareInstance" -> "BaseTemplate._createToken" [ color = "#1bc6a6" ];
+  "CompanyBoardTemplate.prepareInstance" -> "BaseTemplate._createToken" [ color = "#1bc6a6" ];
+  "CompanyBoardTemplate.prepareInstance" -> "BaseTemplate._createDAO" [ color = "#1bc6a6" ];
+  "CompanyBoardTemplate.prepareInstance" -> "BaseTemplate._installVotingApp" [ color = "#1bc6a6" ];
+  "CompanyBoardTemplate.prepareInstance" -> "BaseTemplate._installVotingApp" [ color = "#1bc6a6" ];
+  "CompanyBoardTemplate.prepareInstance" -> "BaseTemplate._createEvmScriptsRegistryPermissions" [ color = "#1bc6a6" ];
+  "CompanyBoardTemplate.prepareInstance" -> "CompanyBoardTemplate._cachePreparedDao" [ color = "#1bc6a6" ];
+  "CompanyBoardTemplate.finalizeInstance" -> "CompanyBoardTemplate._ensureFinalizationSettings" [ color = "#1bc6a6" ];
+  "CompanyBoardTemplate.finalizeInstance" -> "CompanyBoardTemplate._popDaoCache" [ color = "#1bc6a6" ];
+  "CompanyBoardTemplate.finalizeInstance" -> "CompanyBoardTemplate._setupVaultAndFinanceApps" [ color = "#1bc6a6" ];
+  "CompanyBoardTemplate.finalizeInstance" -> "CompanyBoardTemplate._finalizeApps" [ color = "#1bc6a6" ];
+  "CompanyBoardTemplate.finalizeInstance" -> "BaseTemplate._transferRootPermissionsFromTemplateAndFinalizeDAO" [ color = "#1bc6a6" ];
+  "CompanyBoardTemplate.finalizeInstance" -> "BaseTemplate._registerID" [ color = "#1bc6a6" ];
+  "CompanyBoardTemplate.finalizeInstance" -> "CompanyBoardTemplate._ensureFinalizationSettings" [ color = "#1bc6a6" ];
+  "CompanyBoardTemplate.finalizeInstance" -> "CompanyBoardTemplate._popDaoCache" [ color = "#1bc6a6" ];
+  "CompanyBoardTemplate.finalizeInstance" -> "CompanyBoardTemplate._setupVaultAndFinanceApps" [ color = "#1bc6a6" ];
+  "CompanyBoardTemplate.finalizeInstance" -> "CompanyBoardTemplate._setupPayrollApp" [ color = "#1bc6a6" ];
+  "CompanyBoardTemplate.finalizeInstance" -> "CompanyBoardTemplate._finalizeApps" [ color = "#1bc6a6" ];
+  "CompanyBoardTemplate.finalizeInstance" -> "BaseTemplate._transferRootPermissionsFromTemplateAndFinalizeDAO" [ color = "#1bc6a6" ];
+  "CompanyBoardTemplate.finalizeInstance" -> "BaseTemplate._registerID" [ color = "#1bc6a6" ];
+  "CompanyBoardTemplate._finalizeApps" -> "CompanyBoardTemplate._popTokenCaches" [ color = "#1bc6a6" ];
+  "CompanyBoardTemplate._finalizeApps" -> "BaseTemplate._installTokenManagerApp" [ color = "#1bc6a6" ];
+  "CompanyBoardTemplate._finalizeApps" -> "BaseTemplate._installTokenManagerApp" [ color = "#1bc6a6" ];
+  "CompanyBoardTemplate._finalizeApps" -> "Kernel.acl" [ color = "white" ];
+  "CompanyBoardTemplate._finalizeApps" -> "BaseTemplate._mintTokens" [ color = "#1bc6a6" ];
+  "CompanyBoardTemplate._finalizeApps" -> "BaseTemplate._mintTokens" [ color = "#1bc6a6" ];
+  "CompanyBoardTemplate._finalizeApps" -> "BaseTemplate._createTokenManagerPermissions" [ color = "#1bc6a6" ];
+  "CompanyBoardTemplate._finalizeApps" -> "BaseTemplate._createTokenManagerPermissions" [ color = "#1bc6a6" ];
+  "CompanyBoardTemplate._finalizeApps" -> "BaseTemplate._createVotingPermissions" [ color = "#1bc6a6" ];
+  "CompanyBoardTemplate._finalizeApps" -> "BaseTemplate._createVotingPermissions" [ color = "#1bc6a6" ];
+  "CompanyBoardTemplate._setupVaultAndFinanceApps" -> "BaseTemplate._installDefaultAgentApp" [ color = "#1bc6a6" ];
+  "CompanyBoardTemplate._setupVaultAndFinanceApps" -> "BaseTemplate._installVaultApp" [ color = "#1bc6a6" ];
+  "CompanyBoardTemplate._setupVaultAndFinanceApps" -> "BaseTemplate._installFinanceApp" [ color = "#1bc6a6" ];
+  "CompanyBoardTemplate._setupVaultAndFinanceApps" -> "Kernel.acl" [ color = "white" ];
+  "CompanyBoardTemplate._setupVaultAndFinanceApps" -> "CompanyBoardTemplate._createCustomAgentPermissions" [ color = "#1bc6a6" ];
+  "CompanyBoardTemplate._setupVaultAndFinanceApps" -> "BaseTemplate._createVaultPermissions" [ color = "#1bc6a6" ];
+  "CompanyBoardTemplate._setupVaultAndFinanceApps" -> "CompanyBoardTemplate._createCustomFinancePermissions" [ color = "#1bc6a6" ];
+  "CompanyBoardTemplate._setupPayrollApp" -> "BaseTemplate._unwrapPayrollSettings" [ color = "#1bc6a6" ];
+  "CompanyBoardTemplate._setupPayrollApp" -> "BaseTemplate._installPayrollApp" [ color = "#1bc6a6" ];
+  "CompanyBoardTemplate._setupPayrollApp" -> "Kernel.acl" [ color = "white" ];
+  "CompanyBoardTemplate._setupPayrollApp" -> "BaseTemplate._createPayrollPermissions" [ color = "#1bc6a6" ];
+  "CompanyBoardTemplate._createCustomAgentPermissions" -> "BaseTemplate._createPermissions" [ color = "#1bc6a6" ];
+  "CompanyBoardTemplate._createCustomAgentPermissions" -> "Agent.EXECUTE_ROLE" [ color = "white" ];
+  "CompanyBoardTemplate._createCustomAgentPermissions" -> "BaseTemplate._createPermissions" [ color = "#1bc6a6" ];
+  "CompanyBoardTemplate._createCustomAgentPermissions" -> "Agent.RUN_SCRIPT_ROLE" [ color = "white" ];
+  "CompanyBoardTemplate._createCustomFinancePermissions" -> "BaseTemplate._createPermissions" [ color = "#1bc6a6" ];
+  "CompanyBoardTemplate._createCustomFinancePermissions" -> "Finance.CREATE_PAYMENTS_ROLE" [ color = "white" ];
+  "CompanyBoardTemplate._createCustomFinancePermissions" -> "ACL.createPermission" [ color = "white" ];
+  "CompanyBoardTemplate._createCustomFinancePermissions" -> "Finance.EXECUTE_PAYMENTS_ROLE" [ color = "white" ];
+  "CompanyBoardTemplate._createCustomFinancePermissions" -> "ACL.createPermission" [ color = "white" ];
+  "CompanyBoardTemplate._createCustomFinancePermissions" -> "Finance.MANAGE_PAYMENTS_ROLE" [ color = "white" ];
+  "BaseTemplate.null" -> "BaseTemplate._ensureAragonIdIsValid" [ color = "#1bc6a6" ];
+  "BaseTemplate.null" -> "BaseTemplate._ensureMiniMeFactoryIsValid" [ color = "#1bc6a6" ];
+  "CompanyTemplate.newTokenAndInstance" -> "CompanyTemplate.newToken" [ color = "#1bc6a6" ];
+  "CompanyTemplate.newTokenAndInstance" -> "CompanyTemplate.newInstance" [ color = "#1bc6a6" ];
+  "CompanyTemplate.newToken" -> "BaseTemplate._createToken" [ color = "#1bc6a6" ];
+  "CompanyTemplate.newToken" -> "CompanyTemplate._cacheToken" [ color = "#1bc6a6" ];
+  "CompanyTemplate.newInstance" -> "CompanyTemplate._ensureCompanySettings" [ color = "#1bc6a6" ];
+  "CompanyTemplate.newInstance" -> "BaseTemplate._createDAO" [ color = "#1bc6a6" ];
+  "CompanyTemplate.newInstance" -> "CompanyTemplate._setupApps" [ color = "#1bc6a6" ];
+  "CompanyTemplate.newInstance" -> "BaseTemplate._transferRootPermissionsFromTemplateAndFinalizeDAO" [ color = "#1bc6a6" ];
+  "CompanyTemplate.newInstance" -> "BaseTemplate._registerID" [ color = "#1bc6a6" ];
+  "CompanyTemplate.newInstance" -> "CompanyTemplate._ensureCompanySettings" [ color = "#1bc6a6" ];
+  "CompanyTemplate.newInstance" -> "BaseTemplate._createDAO" [ color = "#1bc6a6" ];
+  "CompanyTemplate.newInstance" -> "CompanyTemplate._setupApps" [ color = "#1bc6a6" ];
+  "CompanyTemplate.newInstance" -> "CompanyTemplate._setupPayrollApp" [ color = "#1bc6a6" ];
+  "CompanyTemplate.newInstance" -> "BaseTemplate._transferRootPermissionsFromTemplateAndFinalizeDAO" [ color = "#1bc6a6" ];
+  "CompanyTemplate.newInstance" -> "BaseTemplate._registerID" [ color = "#1bc6a6" ];
+  "CompanyTemplate._setupApps" -> "CompanyTemplate._popTokenCache" [ color = "#1bc6a6" ];
+  "CompanyTemplate._setupApps" -> "BaseTemplate._installDefaultAgentApp" [ color = "#1bc6a6" ];
+  "CompanyTemplate._setupApps" -> "BaseTemplate._installVaultApp" [ color = "#1bc6a6" ];
+  "CompanyTemplate._setupApps" -> "BaseTemplate._installFinanceApp" [ color = "#1bc6a6" ];
+  "CompanyTemplate._setupApps" -> "BaseTemplate._installTokenManagerApp" [ color = "#1bc6a6" ];
+  "CompanyTemplate._setupApps" -> "BaseTemplate._installVotingApp" [ color = "#1bc6a6" ];
+  "CompanyTemplate._setupApps" -> "BaseTemplate._mintTokens" [ color = "#1bc6a6" ];
+  "CompanyTemplate._setupApps" -> "CompanyTemplate._setupPermissions" [ color = "#1bc6a6" ];
+  "CompanyTemplate._setupPayrollApp" -> "BaseTemplate._unwrapPayrollSettings" [ color = "#1bc6a6" ];
+  "CompanyTemplate._setupPayrollApp" -> "BaseTemplate._installPayrollApp" [ color = "#1bc6a6" ];
+  "CompanyTemplate._setupPayrollApp" -> "BaseTemplate._createPayrollPermissions" [ color = "#1bc6a6" ];
+  "CompanyTemplate._setupPermissions" -> "BaseTemplate._createAgentPermissions" [ color = "#1bc6a6" ];
+  "CompanyTemplate._setupPermissions" -> "BaseTemplate._createVaultPermissions" [ color = "#1bc6a6" ];
+  "CompanyTemplate._setupPermissions" -> "BaseTemplate._createFinancePermissions" [ color = "#1bc6a6" ];
+  "CompanyTemplate._setupPermissions" -> "BaseTemplate._createEvmScriptsRegistryPermissions" [ color = "#1bc6a6" ];
+  "CompanyTemplate._setupPermissions" -> "BaseTemplate._createVotingPermissions" [ color = "#1bc6a6" ];
+  "CompanyTemplate._setupPermissions" -> "BaseTemplate._createTokenManagerPermissions" [ color = "#1bc6a6" ];
+  "CompanyTemplate._ensureCompanySettings" -> "CompanyTemplate._ensureCompanySettings" [ color = "#1bc6a6" ];
+  "BaseTemplate.null" -> "BaseTemplate._ensureAragonIdIsValid" [ color = "#1bc6a6" ];
+  "BaseTemplate.null" -> "BaseTemplate._ensureMiniMeFactoryIsValid" [ color = "#1bc6a6" ];
+  "MembershipTemplate.newTokenAndInstance" -> "MembershipTemplate.newToken" [ color = "#1bc6a6" ];
+  "MembershipTemplate.newTokenAndInstance" -> "MembershipTemplate.newInstance" [ color = "#1bc6a6" ];
+  "MembershipTemplate.newToken" -> "BaseTemplate._createToken" [ color = "#1bc6a6" ];
+  "MembershipTemplate.newToken" -> "MembershipTemplate._cacheToken" [ color = "#1bc6a6" ];
+  "MembershipTemplate.newInstance" -> "MembershipTemplate._ensureMembershipSettings" [ color = "#1bc6a6" ];
+  "MembershipTemplate.newInstance" -> "BaseTemplate._createDAO" [ color = "#1bc6a6" ];
+  "MembershipTemplate.newInstance" -> "MembershipTemplate._setupApps" [ color = "#1bc6a6" ];
+  "MembershipTemplate.newInstance" -> "BaseTemplate._transferRootPermissionsFromTemplateAndFinalizeDAO" [ color = "#1bc6a6" ];
+  "MembershipTemplate.newInstance" -> "BaseTemplate._registerID" [ color = "#1bc6a6" ];
+  "MembershipTemplate.newInstance" -> "MembershipTemplate._ensureMembershipSettings" [ color = "#1bc6a6" ];
+  "MembershipTemplate.newInstance" -> "BaseTemplate._createDAO" [ color = "#1bc6a6" ];
+  "MembershipTemplate.newInstance" -> "MembershipTemplate._setupApps" [ color = "#1bc6a6" ];
+  "MembershipTemplate.newInstance" -> "MembershipTemplate._setupPayrollApp" [ color = "#1bc6a6" ];
+  "MembershipTemplate.newInstance" -> "BaseTemplate._transferRootPermissionsFromTemplateAndFinalizeDAO" [ color = "#1bc6a6" ];
+  "MembershipTemplate.newInstance" -> "BaseTemplate._registerID" [ color = "#1bc6a6" ];
+  "MembershipTemplate._setupApps" -> "MembershipTemplate._popTokenCache" [ color = "#1bc6a6" ];
+  "MembershipTemplate._setupApps" -> "BaseTemplate._installDefaultAgentApp" [ color = "#1bc6a6" ];
+  "MembershipTemplate._setupApps" -> "BaseTemplate._installVaultApp" [ color = "#1bc6a6" ];
+  "MembershipTemplate._setupApps" -> "BaseTemplate._installFinanceApp" [ color = "#1bc6a6" ];
+  "MembershipTemplate._setupApps" -> "BaseTemplate._installTokenManagerApp" [ color = "#1bc6a6" ];
+  "MembershipTemplate._setupApps" -> "BaseTemplate._installVotingApp" [ color = "#1bc6a6" ];
+  "MembershipTemplate._setupApps" -> "BaseTemplate._mintTokens" [ color = "#1bc6a6" ];
+  "MembershipTemplate._setupApps" -> "MembershipTemplate._setupPermissions" [ color = "#1bc6a6" ];
+  "MembershipTemplate._setupPayrollApp" -> "BaseTemplate._unwrapPayrollSettings" [ color = "#1bc6a6" ];
+  "MembershipTemplate._setupPayrollApp" -> "BaseTemplate._installPayrollApp" [ color = "#1bc6a6" ];
+  "MembershipTemplate._setupPayrollApp" -> "BaseTemplate._createPayrollPermissions" [ color = "#1bc6a6" ];
+  "MembershipTemplate._setupPermissions" -> "BaseTemplate._createAgentPermissions" [ color = "#1bc6a6" ];
+  "MembershipTemplate._setupPermissions" -> "BaseTemplate._createVaultPermissions" [ color = "#1bc6a6" ];
+  "MembershipTemplate._setupPermissions" -> "BaseTemplate._createFinancePermissions" [ color = "#1bc6a6" ];
+  "MembershipTemplate._setupPermissions" -> "BaseTemplate._createEvmScriptsRegistryPermissions" [ color = "#1bc6a6" ];
+  "MembershipTemplate._setupPermissions" -> "BaseTemplate._createVotingPermissions" [ color = "#1bc6a6" ];
+  "MembershipTemplate._setupPermissions" -> "BaseTemplate._createTokenManagerPermissions" [ color = "#1bc6a6" ];
+  "MembershipTemplate._ensureMembershipSettings" -> "MembershipTemplate._ensureMembershipSettings" [ color = "#1bc6a6" ];
+  "BaseTemplate.null" -> "BaseTemplate._ensureAragonIdIsValid" [ color = "#1bc6a6" ];
+  "BaseTemplate.null" -> "BaseTemplate._ensureMiniMeFactoryIsValid" [ color = "#1bc6a6" ];
+  "ReputationTemplate.newTokenAndInstance" -> "ReputationTemplate.newToken" [ color = "#1bc6a6" ];
+  "ReputationTemplate.newTokenAndInstance" -> "ReputationTemplate.newInstance" [ color = "#1bc6a6" ];
+  "ReputationTemplate.newToken" -> "BaseTemplate._createToken" [ color = "#1bc6a6" ];
+  "ReputationTemplate.newToken" -> "ReputationTemplate._cacheToken" [ color = "#1bc6a6" ];
+  "ReputationTemplate.newInstance" -> "ReputationTemplate._ensureReputationSettings" [ color = "#1bc6a6" ];
+  "ReputationTemplate.newInstance" -> "BaseTemplate._createDAO" [ color = "#1bc6a6" ];
+  "ReputationTemplate.newInstance" -> "ReputationTemplate._setupApps" [ color = "#1bc6a6" ];
+  "ReputationTemplate.newInstance" -> "BaseTemplate._transferRootPermissionsFromTemplateAndFinalizeDAO" [ color = "#1bc6a6" ];
+  "ReputationTemplate.newInstance" -> "BaseTemplate._registerID" [ color = "#1bc6a6" ];
+  "ReputationTemplate.newInstance" -> "ReputationTemplate._ensureReputationSettings" [ color = "#1bc6a6" ];
+  "ReputationTemplate.newInstance" -> "BaseTemplate._createDAO" [ color = "#1bc6a6" ];
+  "ReputationTemplate.newInstance" -> "ReputationTemplate._setupApps" [ color = "#1bc6a6" ];
+  "ReputationTemplate.newInstance" -> "ReputationTemplate._setupPayrollApp" [ color = "#1bc6a6" ];
+  "ReputationTemplate.newInstance" -> "BaseTemplate._transferRootPermissionsFromTemplateAndFinalizeDAO" [ color = "#1bc6a6" ];
+  "ReputationTemplate.newInstance" -> "BaseTemplate._registerID" [ color = "#1bc6a6" ];
+  "ReputationTemplate._setupApps" -> "ReputationTemplate._popTokenCache" [ color = "#1bc6a6" ];
+  "ReputationTemplate._setupApps" -> "BaseTemplate._installDefaultAgentApp" [ color = "#1bc6a6" ];
+  "ReputationTemplate._setupApps" -> "BaseTemplate._installVaultApp" [ color = "#1bc6a6" ];
+  "ReputationTemplate._setupApps" -> "BaseTemplate._installFinanceApp" [ color = "#1bc6a6" ];
+  "ReputationTemplate._setupApps" -> "BaseTemplate._installTokenManagerApp" [ color = "#1bc6a6" ];
+  "ReputationTemplate._setupApps" -> "BaseTemplate._installVotingApp" [ color = "#1bc6a6" ];
+  "ReputationTemplate._setupApps" -> "BaseTemplate._mintTokens" [ color = "#1bc6a6" ];
+  "ReputationTemplate._setupApps" -> "ReputationTemplate._setupPermissions" [ color = "#1bc6a6" ];
+  "ReputationTemplate._setupPayrollApp" -> "BaseTemplate._unwrapPayrollSettings" [ color = "#1bc6a6" ];
+  "ReputationTemplate._setupPayrollApp" -> "BaseTemplate._installPayrollApp" [ color = "#1bc6a6" ];
+  "ReputationTemplate._setupPayrollApp" -> "BaseTemplate._createPayrollPermissions" [ color = "#1bc6a6" ];
+  "ReputationTemplate._setupPermissions" -> "BaseTemplate._createAgentPermissions" [ color = "#1bc6a6" ];
+  "ReputationTemplate._setupPermissions" -> "BaseTemplate._createVaultPermissions" [ color = "#1bc6a6" ];
+  "ReputationTemplate._setupPermissions" -> "BaseTemplate._createFinancePermissions" [ color = "#1bc6a6" ];
+  "ReputationTemplate._setupPermissions" -> "BaseTemplate._createEvmScriptsRegistryPermissions" [ color = "#1bc6a6" ];
+  "ReputationTemplate._setupPermissions" -> "BaseTemplate._createVotingPermissions" [ color = "#1bc6a6" ];
+  "ReputationTemplate._setupPermissions" -> "BaseTemplate._createTokenManagerPermissions" [ color = "#1bc6a6" ];
+  "ReputationTemplate._ensureReputationSettings" -> "ReputationTemplate._ensureReputationSettings" [ color = "#1bc6a6" ];
+  "MultiSigWallet.removeOwner" -> "MultiSigWallet.changeRequirement" [ color = "#1bc6a6" ];
+  "MultiSigWallet.submitTransaction" -> "MultiSigWallet.addTransaction" [ color = "#1bc6a6" ];
+  "MultiSigWallet.submitTransaction" -> "MultiSigWallet.confirmTransaction" [ color = "#1bc6a6" ];
+  "MultiSigWallet.confirmTransaction" -> "MultiSigWallet.executeTransaction" [ color = "#1bc6a6" ];
+  "MultiSigWallet.executeTransaction" -> "MultiSigWallet.isConfirmed" [ color = "#1bc6a6" ];
+  "MultiSigWallet.executeTransaction" -> "MultiSigWallet.external_call" [ color = "#1bc6a6" ];
+  "BaseTemplate.null" -> "BaseTemplate._ensureAragonIdIsValid" [ color = "#1bc6a6" ];
+  "BaseTemplate.null" -> "BaseTemplate._ensureMiniMeFactoryIsValid" [ color = "#1bc6a6" ];
+  "TrustTemplate.prepareInstance" -> "BaseTemplate._createDAO" [ color = "#1bc6a6" ];
+  "TrustTemplate.prepareInstance" -> "BaseTemplate._createToken" [ color = "#1bc6a6" ];
+  "TrustTemplate.prepareInstance" -> "BaseTemplate._createToken" [ color = "#1bc6a6" ];
+  "TrustTemplate.prepareInstance" -> "TrustTemplate._storeDaoCache" [ color = "#1bc6a6" ];
+  "TrustTemplate.setupInstance" -> "TrustTemplate._hasDaoCache" [ color = "#1bc6a6" ];
+  "TrustTemplate.setupInstance" -> "TrustTemplate._calculateBlockedHeirsSupply" [ color = "#1bc6a6" ];
+  "TrustTemplate.setupInstance" -> "TrustTemplate._getDaoCache" [ color = "#1bc6a6" ];
+  "TrustTemplate.setupInstance" -> "TrustTemplate._setupApps" [ color = "#1bc6a6" ];
+  "TrustTemplate.setupInstance" -> "BaseTemplate._registerID" [ color = "#1bc6a6" ];
+  "TrustTemplate.setupMultiSig" -> "TrustTemplate._hasDaoCache" [ color = "#1bc6a6" ];
+  "TrustTemplate.setupMultiSig" -> "TrustTemplate._hasAppsCache" [ color = "#1bc6a6" ];
+  "TrustTemplate.setupMultiSig" -> "TrustTemplate._getDaoCache" [ color = "#1bc6a6" ];
+  "TrustTemplate.setupMultiSig" -> "TrustTemplate._setupMultiSig" [ color = "#1bc6a6" ];
+  "TrustTemplate._setupApps" -> "Kernel.acl" [ color = "white" ];
+  "TrustTemplate._setupApps" -> "BaseTemplate._installVaultApp" [ color = "#1bc6a6" ];
+  "TrustTemplate._setupApps" -> "BaseTemplate._installNonDefaultAgentApp" [ color = "#1bc6a6" ];
+  "TrustTemplate._setupApps" -> "BaseTemplate._installFinanceApp" [ color = "#1bc6a6" ];
+  "TrustTemplate._setupApps" -> "TrustTemplate._installTokenApps" [ color = "#1bc6a6" ];
+  "TrustTemplate._setupApps" -> "BaseTemplate._mintTokens" [ color = "#1bc6a6" ];
+  "TrustTemplate._setupApps" -> "BaseTemplate._mintTokens" [ color = "#1bc6a6" ];
+  "TrustTemplate._setupApps" -> "BaseTemplate._mintTokens" [ color = "#1bc6a6" ];
+  "TrustTemplate._setupApps" -> "BaseTemplate._createVaultPermissions" [ color = "#1bc6a6" ];
+  "TrustTemplate._setupApps" -> "BaseTemplate._createFinancePermissions" [ color = "#1bc6a6" ];
+  "TrustTemplate._setupApps" -> "BaseTemplate._createEvmScriptsRegistryPermissions" [ color = "#1bc6a6" ];
+  "TrustTemplate._setupApps" -> "TrustTemplate._createCustomAgentPermissions" [ color = "#1bc6a6" ];
+  "TrustTemplate._setupApps" -> "TrustTemplate._createCustomVotingPermissions" [ color = "#1bc6a6" ];
+  "TrustTemplate._setupApps" -> "TrustTemplate._createCustomVotingPermissions" [ color = "#1bc6a6" ];
+  "TrustTemplate._setupApps" -> "TrustTemplate._createCustomTokenManagerPermissions" [ color = "#1bc6a6" ];
+  "TrustTemplate._setupApps" -> "TrustTemplate._createCustomTokenManagerPermissions" [ color = "#1bc6a6" ];
+  "TrustTemplate._setupApps" -> "TrustTemplate._storeAppsCache" [ color = "#1bc6a6" ];
+  "TrustTemplate._setupMultiSig" -> "Kernel.acl" [ color = "white" ];
+  "TrustTemplate._setupMultiSig" -> "TrustTemplate._getAppsCache" [ color = "#1bc6a6" ];
+  "TrustTemplate._setupMultiSig" -> "TrustTemplate._createMultiSig" [ color = "#1bc6a6" ];
+  "TrustTemplate._setupMultiSig" -> "TrustTemplate._createMultiSigPermissions" [ color = "#1bc6a6" ];
+  "TrustTemplate._setupMultiSig" -> "BaseTemplate._transferRootPermissionsFromTemplateAndFinalizeDAO" [ color = "#1bc6a6" ];
+  "TrustTemplate._setupMultiSig" -> "TrustTemplate._cleanCache" [ color = "#1bc6a6" ];
+  "TrustTemplate._installTokenApps" -> "TrustTemplate._getTokensCache" [ color = "#1bc6a6" ];
+  "TrustTemplate._installTokenApps" -> "BaseTemplate._installVotingApp" [ color = "#1bc6a6" ];
+  "TrustTemplate._installTokenApps" -> "BaseTemplate._installVotingApp" [ color = "#1bc6a6" ];
+  "TrustTemplate._installTokenApps" -> "BaseTemplate._installTokenManagerApp" [ color = "#1bc6a6" ];
+  "TrustTemplate._installTokenApps" -> "BaseTemplate._installTokenManagerApp" [ color = "#1bc6a6" ];
+  "TrustTemplate._createCustomAgentPermissions" -> "BaseTemplate._createPermissions" [ color = "#1bc6a6" ];
+  "TrustTemplate._createCustomAgentPermissions" -> "Agent.EXECUTE_ROLE" [ color = "white" ];
+  "TrustTemplate._createCustomAgentPermissions" -> "BaseTemplate._createPermissions" [ color = "#1bc6a6" ];
+  "TrustTemplate._createCustomAgentPermissions" -> "Agent.RUN_SCRIPT_ROLE" [ color = "white" ];
+  "TrustTemplate._createCustomTokenManagerPermissions" -> "ACL.createPermission" [ color = "white" ];
+  "TrustTemplate._createCustomTokenManagerPermissions" -> "TokenManager.ASSIGN_ROLE" [ color = "white" ];
+  "TrustTemplate._createCustomTokenManagerPermissions" -> "ACL.createPermission" [ color = "white" ];
+  "TrustTemplate._createCustomTokenManagerPermissions" -> "TokenManager.REVOKE_VESTINGS_ROLE" [ color = "white" ];
+  "TrustTemplate._createCustomVotingPermissions" -> "ACL.createPermission" [ color = "white" ];
+  "TrustTemplate._createCustomVotingPermissions" -> "Voting.CREATE_VOTES_ROLE" [ color = "white" ];
+  "TrustTemplate._createCustomVotingPermissions" -> "ACL.createPermission" [ color = "white" ];
+  "TrustTemplate._createCustomVotingPermissions" -> "Voting.MODIFY_QUORUM_ROLE" [ color = "white" ];
+  "TrustTemplate._createCustomVotingPermissions" -> "ACL.createPermission" [ color = "white" ];
+  "TrustTemplate._createCustomVotingPermissions" -> "Voting.MODIFY_SUPPORT_ROLE" [ color = "white" ];
+  "TrustTemplate._createMultiSigPermissions" -> "ACL.createPermission" [ color = "white" ];
+  "TrustTemplate._createMultiSigPermissions" -> "TokenManager.BURN_ROLE" [ color = "white" ];
+  "TrustTemplate._createMultiSigPermissions" -> "ACL.createPermission" [ color = "white" ];
+  "TrustTemplate._createMultiSigPermissions" -> "TokenManager.MINT_ROLE" [ color = "white" ];
+  "TrustTemplate._createMultiSigPermissions" -> "ACL.createPermission" [ color = "white" ];
+  "TrustTemplate._createMultiSigPermissions" -> "TokenManager.BURN_ROLE" [ color = "white" ];
+  "TrustTemplate._createMultiSigPermissions" -> "ACL.createPermission" [ color = "white" ];
+  "TrustTemplate._createMultiSigPermissions" -> "TokenManager.MINT_ROLE" [ color = "white" ];
+  "TrustTemplate._calculateBlockedHeirsSupply" -> "totalHeirsSupply.add" [ color = "white" ];
+  "TrustTemplate._calculateBlockedHeirsSupply" -> "totalHeirsSupply.mul" [ color = "white" ];
+  "TrustTemplate._calculateBlockedHeirsSupply" -> "totalHeirsSupply.mul" [ color = "white" ];
+  "TrustTemplate._calculateBlockedHeirsSupply" -> "totalSupply.sub" [ color = "white" ];
+
+
+rankdir=LR
+node [shape=plaintext]
+subgraph cluster_01 { 
+label = "Legend";
+key [label=<<table border="0" cellpadding="2" cellspacing="0" cellborder="0">
+  <tr><td align="right" port="i1">Internal Call</td></tr>
+  <tr><td align="right" port="i2">External Call</td></tr>
+  <tr><td align="right" port="i3">Defined Contract</td></tr>
+  <tr><td align="right" port="i4">Undefined Contract</td></tr>
+  </table>>]
+key2 [label=<<table border="0" cellpadding="2" cellspacing="0" cellborder="0">
+  <tr><td port="i1">&nbsp;&nbsp;&nbsp;</td></tr>
+  <tr><td port="i2">&nbsp;&nbsp;&nbsp;</td></tr>
+  <tr><td port="i3" bgcolor="#445773">&nbsp;&nbsp;&nbsp;</td></tr>
+  <tr><td port="i4">
+    <table border="1" cellborder="0" cellspacing="0" cellpadding="7" color="#e8726d">
+      <tr>
+       <td></td>
+      </tr>
+     </table>
+  </td></tr>
+  </table>>]
+key:i1:e -> key2:i1:w [color="#1bc6a6"]
+key:i2:e -> key2:i2:w [color="white"]
+}
+}
+

@@ -1,0 +1,26 @@
+digraph G {
+  graph [ ratio = "auto", page = "40" ];
+  "BaseTemplate";
+  "APMNamehash";
+  "IsContract";
+  "TokenCache";
+  "BareTemplate";
+  "CompanyBoardTemplate";
+  "CompanyTemplate";
+  "MembershipTemplate";
+  "ReputationTemplate";
+  "MultiSigWallet";
+  "TrustTemplate";
+  "BaseTemplate" -> "APMNamehash";
+  "BaseTemplate" -> "IsContract";
+  "BareTemplate" -> "BaseTemplate";
+  "CompanyBoardTemplate" -> "BaseTemplate";
+  "CompanyTemplate" -> "BaseTemplate";
+  "CompanyTemplate" -> "TokenCache";
+  "MembershipTemplate" -> "BaseTemplate";
+  "MembershipTemplate" -> "TokenCache";
+  "ReputationTemplate" -> "BaseTemplate";
+  "ReputationTemplate" -> "TokenCache";
+  "TrustTemplate" -> "BaseTemplate";
+}
+
