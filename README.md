@@ -31,7 +31,7 @@
 
 ## 1 Summary
 
-ConsenSys Diligence conducted a security audit on the Aragon DAO-Templates.
+ConsenSys Diligence conducted a security audit on the Aragon 0.8 DAO Templates.
 
 * **Project Name:** Aragon dao-templates v0.8
 * **Client Name:** Aragon
@@ -56,8 +56,8 @@ This audit covered the following files:
 | templates/trust/contracts/MultiSigWallet.sol               | c2448282059bb320f6ca0fa55f2038b6b22a1a2b |
 | templates/trust/contracts/TrustTemplate.sol                | 8748bf3bb596433517d373176d57c7e8d1561a53 |
 
-Clients priority for the agreed duration of the audit (in order):
-* Priority
+Client's priority for the agreed duration of the audit (in order):
+* High Priority
   * Company
   * Company-Board
   * Membership
@@ -85,7 +85,7 @@ The audit team evaluated that the system is secure, resilient, and working accor
 ## 3 System Overview
 
 
-Aragon provides so-called DAO template contracts to support the deployment of Aragon organizations. The templates model common organizational structures or DAO scenarios. They aim to provide a way to kickstart an organization and customize it to a clients need. A DAO-template contract deploys a new DAO, installs [applications](https://github.com/aragon/aragon-apps/) required for the DAO scenario, initializes and configures them and defines the trust relationships between components.
+Aragon provides so-called DAO Template contracts to support the deployment of Aragon organizations. The templates model common organizational structures or DAO scenarios. They aim to provide a way to kickstart an organization and customize it to a client's need. A DAO Template contract deploys a new DAO, installs applications (e.g. those in [aragon-apps](https://github.com/aragon/aragon-apps/)) required for the DAO scenario, initializes and configures them, and defines the trust relationships between components.
 
 With Aragon 0.8, the following templates are available:
 
@@ -97,18 +97,20 @@ With Aragon 0.8, the following templates are available:
 
 ### 3.1 Detailed Design
 
-The DAO templates are split into a common part used by many templates which can be found in the `./shared/` folder and implements functionality that caters all the scenario specific templates. The `BaseTemplate` defines constants like the apm name hashes of available applications and provides functionality to deploy a bare DAO, register it, install applications and set-up and transfer permissions. `TokenCache` provides means to cache a token across transactions. Similar functionality exists to cache multiple tokens, apps or an incomplete DAO set-up where a two-step deployment is required (`company-board` and `trust` DAO template). Due to the design of the cache the two-step deployment allows only one DAO to be prepared at a time by a deployer.
+The DAO templates are split into a common part used by many templates which can be found in the `./shared/` folder and implements functionality that caters to all the scenario-specific templates. The `BaseTemplate` defines constants like the aragonPM name hashes of available applications and provides functionality to deploy a bare DAO, register it on ENS, install applications, and set-up and transfer permissions. `TokenCache` provides functionality to cache a token across DAO creation transactions. Similar functionality exists to cache multiple tokens, apps or an incomplete DAO set-up where a multi-step deployment is required (`company-board` and `trust` templates). Due to the design of the cache, the two-step deployment allows only one DAO to be prepared at a time by a deployer.
 
-The following image provides a high-level components centric view on Aragon applications, their interfaces, the roles they export and some annotations about who interacts with them.
+The following image provides a high-level components centric view on Aragon applications, their interfaces, the roles they export, and some annotations about who interacts with them.
 
 ![apps overview](./diagrams/apps_overview.png)
 
 
-#### AragonOS
+#### aragonOS
 
 ##### DAO Application and Permission management
 
-A new DAO is deployed by creating a new `KernelProxy` for the DAO kernel implementation and setting an initial admin (`CREATE_PERMISSIONS_ROLE`). The `Kernel` contains an app mapping, provides functionality to install apps by deploying app proxies, controls app permissioning via the `ACL` subsystem and implements upgradeability (kernel, apps). As outlined in the right part of the diagram, the initial admin may grant `KERNEL_APP_MANAGER` permissions to an account. This account will be allowed to install/update/manage applications for the DAO. The initial admin may grant or revoke DAO or application specific permissions to an account and specify an account that acts as the permission manager for the specific role. Permissions are managed by the `ACL` subsystem that controls who has permissions to execute an action in an Aragon application and who can re-grant or revoke that permission. The permission is managed by a Manager who can revoke or re-grant permissions.
+A new DAO is deployed by creating a new `KernelProxy` for the DAO Kernel implementation and setting an initial admin (`CREATE_PERMISSIONS_ROLE`). The `Kernel` contains an app mapping, provides functionality to install apps by deploying app proxies, and implements upgradeability for both the kernel and apps. Permissions are managed by the `ACL` subsystem that controls who has permissions to execute an action in an Aragon application and who can re-grant or revoke that permission (a permission's "manager").
+
+As outlined in the right part of the diagram, the initial admin may grant `Kernel.APP_MANAGER_ROLE` to an account. This account will be allowed to install/update/manage applications for the DAO. The initial admin may grant or revoke DAO or application specific permissions to an account and specify an account that acts as the permission manager for the specific role.
 
 Exported permissions:
 
@@ -117,47 +119,47 @@ Exported permissions:
 
 For reference, `ACL` provides the following interfaces to manage permissions:
 
-* Creates a permission that wasn't previously set and managed.
+* Creates a permission that wasn't previously managed.
 
 `function createPermission(address _entity, address _app, bytes32 _role, address _manager)`
 
-* Grants permission if allowed. This requires `msg.sender` to be the permission manager
+* Grants permission if allowed. This requires `msg.sender` to be the permission manager.
 
 `function grantPermission(address _entity, address _app, bytes32 _role)`
 
- * Grants a permission with parameters if allowed. This requires `msg.sender` to be the permission manager
+ * Grants a permission with parameters if allowed. This requires `msg.sender` to be the permission manager.
 
  `function grantPermissionP(address _entity, address _app, bytes32 _role, uint256[] _params)`
 
- * Revokes permission if allowed. This requires `msg.sender` to be the the permission manager
+ * Revokes permission if allowed. This requires `msg.sender` to be the permission manager.
 
  `function revokePermission(address _entity, address _app, bytes32 _role)`
 
- * Set `_newManager` as the manager of `_role` in `_app`
+ * Set `_newManager` as the manager of `_role` in `_app`. This requires `msg.sender` to be the permission manager.
 
 `function setPermissionManager(address _newManager, address _app, bytes32 _role)`
 
- * Remove the manager of `_role` in `_app`
+ * Remove the manager of `_role` in `_app`. This requires `msg.sender` to be the permission manager.
 
 `function removePermissionManager(address _app, bytes32 _role)`
 
- * Burn non-existent `_role` in `_app`, so no modification can be made to it (grant, revoke, permission manager)
+ * Burn non-managed `_role` in `_app`, so no later modifications can be made (e.g. grant, revoke, permission manager)
 
 `function createBurnedPermission(address _app, bytes32 _role)`
 
- * Burn `_role` in `_app`, so no modification can be made to it (grant, revoke, permission manager)
+ * Burn `_role` in `_app`, so no later modification can be made (e.g. grant, revoke, permission manager). This requires `msg.sender` to be the permission manager.
 
 `function burnPermissionManager(address _app, bytes32 _role)`
 
 ##### Applications
 
-Aragon provides the following applications
+The following applications from [aragon-apps](https://github.com/aragon/aragon-apps/) are provided to organizations through the templates.
 
 ###### Agent
 
-An agent allows to perform arbitrary calls to contracts and therefore acts as an external interface of the DAO. It allows the DAO to participate as a stakeholder in other contracts or DAOs. The agent also implements the `Vault` application (see below). As outlined in the diagram, roles can be assigned to any address.
+An agent allows performing arbitrary calls to contracts and therefore acts as an external interface of the DAO. It allows the DAO to participate as a stakeholder in other contracts or DAOs. The agent also implements the `Vault` application (see below). As outlined in the diagram, roles can be assigned to any address.
 
-The `EXECUTE_ROLE` allows an entity to perform arbitrary calls to contract with `ETH` value transfer with user provided call-data (`execute(target, ethValue, calldata)`). The `RUN_SCRIPT_ROLE` allows an entity to execute `evmScript` by calling `forward(evmScript)` which may call arbitrary addresses depending on the evmscript executor (without `ETH` value transfer). Both methods allow an entity owning the permission to call addresses within the DAO or external to the DAO on behalf of the `Agent`.
+The `EXECUTE_ROLE` allows an entity to perform arbitrary calls to contract with `ETH` value transfer with user provided call-data (`execute(target, ethValue, calldata)`). The `RUN_SCRIPT_ROLE` allows an entity to execute an `evmScript` by calling `forward(evmScript)`, which may call arbitrary addresses depending on the evmscript executor (without `ETH` value transfer). Both methods allow an entity owning the permission to call addresses within the DAO or external to the DAO on behalf of the `Agent`.
 
 Exported permissions:
 
@@ -169,9 +171,9 @@ Exported permissions:
 
 ###### Finance
 
-The finance application is the central point to keep track of income and expenses (`ETH` or Token). It can be used to create recurring or one-time payments. Finances are accounted in configurable financial periods (financial quarters). A limit on how much units of a token can be spent per period can be defined (budget) with the default being unlimited. If it is set, Finance will only allow the budgeted amount of tokens to be spent for the period. The balance for a period can be negative if it is overspent. The Finance application does not hold funds on its own but interacts with a `Vault` or `Agent` application to execute the payment. Financial statements cannot be created manually and they are always based on deposit or spent transactions/events.
+The finance application is the central point to keep track of income and expenses (`ETH` or ERC20 tokens). It can be used to create recurring or one-time payments. Finances are accounted in configurable financial periods (e.g. quarters). A limit on how many units of a token can be spent per period can be defined (budget) with the default being unlimited. If it is set, Finance will only allow the budgeted amount of tokens to be spent for the period. The balance for a period can be negative if it is overspent. The Finance application does not hold funds on its own but interacts with a `Vault` or `Agent` application to execute the payment. Financial statements cannot be created manually as they are always based on deposit or spent transactions/events.
 
-An entity allowed to create immediate payments in a system that is not restricted by budgets may be able to spend all the DAOs funds.
+An entity allowed to create immediate payments in a system that is not restricted by budgets may be able to spend all of a DAO's funds.
 
 Exported permissions:
 
@@ -184,10 +186,9 @@ Exported permissions:
 
 ###### Voting
 
-Allows the DAO to execute a set of actions on entities if the token holder decides to do so.
+Allows the DAO to execute arbitrary actions based on voting results.
 
-An entity may create a vote that executes evmScript when it passes.
-Stakeholders in the DAO (TokenHolders) can vote with their stake in votings.
+An entity may create a vote that executes `evmScript` when it passes. Stakeholders in the DAO (token holders) can vote with their stake in votings.
 
 Exported permissions:
 
@@ -197,9 +198,9 @@ Exported permissions:
 
 ###### Survey
 
-A survey application similar to `Voting` for signaling to support and establish community sentiment.
+A survey application similar to `Voting` for signaling to support and establish community sentiment. It cannot execute any actions.
 
-TokenHolders may participate in surveys with their stake.
+Token holders may participate in surveys with their stake.
 
 Exported permissions:
 
@@ -208,9 +209,9 @@ Exported permissions:
 
 ###### Token Manager
 
-The TokenManager is an abstraction and the controller of the `MiniMeToken`. A token manager for a specific `MiniMeToken` is set by calling `MiniMeToken.changeController(TokenManager)`. One TokenManager can only be the controller of one `MiniMeToken`. The Token Manager can mint and destroy tokens, assign them and define token vestings. Token transfers on a controlled `MiniMeToken` cause a `hook` to be called on the `TokenManager` which then decides whether to allow or reject the action.
+The TokenManager is an abstraction and the controller of a `MiniMeToken`. A TokenManager for a specific `MiniMeToken` is set by calling `MiniMeToken.changeController(TokenManager)`. One TokenManager can only be the controller of one `MiniMeToken`. The TokenManager can mint and destroy tokens, assign them freely, and define token vestings. Token transfers on a controlled `MiniMeToken` cause a `hook` to be called on the `TokenManager` which then decides whether to allow or reject the action.
 
-Tokenholder may perform actions on behalf of the `TokenManager` e.g. to create Votes or call arbitrary commands by calling `TokenManager.forward(evmScript)`. If the `TokenManager` permits, Tokenholder may freely transfer tokens to other parties.
+Token holders of the controlled `MiniMeToken` may perform actions on behalf of the `TokenManager`, e.g. to create votes or call arbitrary commands by calling `TokenManager.forward(evmScript)`. If the `TokenManager` permits, a token holder may freely transfer tokens to other parties.
 
 
 Exported permissions:
@@ -223,9 +224,9 @@ Exported permissions:
 
 ###### Vault
 
-The value store of the DAO. It managed `ERC20` and `ETH` assets.
+The value store of the DAO. It manages `ERC20` token and `ETH` assets.
 
-An entity owning the permission to transfer funds has full control of the DAOs assets.
+An entity owning the permission to transfer funds has full control over the DAO's assets.
 
 Exported permissions:
 
@@ -247,9 +248,9 @@ Exported permissions:
 * `Payroll.MODIFY_RATE_EXPIRY_ROLE`
 
 
-#### DAO-Templates
+#### DAO Templates
 
-The following section describes the DAO-Templates in more detail.
+The following section describes the DAO Templates in more detail.
 
 Please refer to [5 Security Specification](#5-security-specification) for a discussion about the security properties.
 
@@ -259,14 +260,14 @@ Please refer to [5 Security Specification](#5-security-specification) for a disc
  </figcaption>
  </p>
 
-##### Inheritance graph
+##### Inheritance Graph
 A complete view of the inheritance structure:
 
-![Inheritance graph](./tool-output/surya/inheritance.dot.png "Inheritance graph ")
+![Inheritance graph](./tool-output/surya/inheritance.dot.png "Inheritance graph")
 
 ##### Components
 
-An actor centric view on the DAO-templates indicating what functionality is exposed by the  DAO deployment contracts for `Bare`, `Reputation`, `CompanyBoard`, `Company`, `Membership` and the `Trust` template is shown in the following class diagram. Externally reachable methods are annotated in green, internal and private functions are yellow or red. A magnifying glass indicates that the function is pure or view-only. State and constant variables are listed in the top area of the class illustration.
+An actor-centric view on the DAO Templates indicating what functionality is exposed by the DAO deployment contracts for `Bare`, `Reputation`, `CompanyBoard`, `Company`, `Membership` and the `Trust` template is shown in the following class diagram. Externally reachable methods are annotated in green, internal and private functions are yellow or red. A magnifying glass indicates that the function is pure or view-only. State and constant variables are listed in the top area of the class illustration.
 
 ![class-uml](./diagrams/dao_templates_uml.png)
 
@@ -276,11 +277,13 @@ The following illustration provides an overview of the high level setup steps fo
 
 <img width="400" alt="setup" src="./diagrams/bare_setup.png">
 
-The bare template - as the name suggests - deploys a minimum viable DAO. No token will be created by this template. The DAO's name will not be registered with ENS. The template optionally allows to initialize **one** application of the callers choice and finally transfers permissions to the caller. The application will be initialized with the user provided `initializeCalldata`. No input validation is or even can be performed on that data. The caller can also provide a list of permissions to create on the application. No input validation is performed on this list as well. Applications that require the presence of a token might not be functional as no token is deployed with the DAO. The DAOs token might pre-exist though. However, any token can be used and it can even be non-conformant to the `MiniMeToken` implementation generally used.
+The `Bare` template - as the name suggests - deploys a minimum viable DAO. No token will be created by this template. The DAO's name will not be registered with ENS. The template optionally allows to initialize **one** application of the callers choice and finally transfers permissions to the caller. The application will be initialized with the user provided `initializeCalldata`. No input validation is or even can be performed on that data. The caller can also provide a list of permissions to create on the application. No input validation is performed on this list as well. Applications that require the presence of a token might not be functional as no token is deployed with the DAO. The DAO's token might pre-exist though. However, any token can be used and it can even be non-conformant to the `MiniMeToken` implementation generally used.
 
-The result is a minimum viable DAO that is barely functional and requires additional manual effort to be finalized. Please note that there is considerable risk of misconfiguration for this DAO template. The resulting DAO is both intransparent as the setup is not fully self-contained in a smart-contract and centralized with the deployer being the single point of trust. Even if an application is initially deployed with the application it might not be fully functional (e.g. forwarding might fail due to missing setup of the `EVMScriptRegistry`)
+The result is a minimum viable DAO that is barely functional and requires additional manual effort to be finalized. Please note that there is considerable risk of misconfiguration for this DAO template. The resulting DAO is both non-transparent as the setup is not fully self-contained in a smart-contract and centralized with the deployer being the single point of trust. Even if an application is initially deployed with the template, the application might not be fully functional (e.g. due to dependencies on other applications being installed).
 
-The DAO comes with an unmanaged default `EVMScriptRegistry` that includes the `baseCallScript` executor for use with the forwarding functionality in applications. This template is meant to be further customized.
+The DAO comes with an unmanaged default `EVMScriptRegistry` that includes the `CallScript` executor for use with the forwarding functionality in applications.
+
+This template is meant to be further customized.
 
 ##### Company Template
 
@@ -288,9 +291,9 @@ The following illustration provides an overview of the high level setup steps fo
 
 <img width="400" alt="setup" src="./diagrams/company_setup.png">
 
-The company template is similar to the aragon v0.7 [democracy](https://github.com/aragon/dao-templates/tree/9886bba4c0a201bf056f44d751373e5d804e1b90/kits/democracy) kit with the difference, that the `Voting.MODIFY_SUPPORT` permission is not burned. The company template is based on a Token with 18 decimals that is transferable with no limit being set on how many tokens a single account can hold. TokenHolders with their stakes are the key decision makers.
+The `Company` template is similar to the Aragon v0.7 [democracy kit](https://github.com/aragon/dao-templates/tree/9886bba4c0a201bf056f44d751373e5d804e1b90/kits/democracy) with the difference that the `Voting.MODIFY_SUPPORT` permission is not burned. The company template is based on a token with 18 decimals that is transferable with no limit being set on how many tokens a single account can hold. Token holders with their stakes are the key decision makers.
 
-The template creates the new token according to the token parameters as defined in the contract and deploys a new DAO, initially assigning `CREATE_PERMISSIONS` and `APP_MANAGER` roles to itself. Subsequently the DAO apps are installed and initialized, tokens are minted and the permissions are set up. Finally,  `CREATE_PERMISSIONS` and `APP_MANAGER` roles are transferred to the Voting application to allow the Stakeholders to vote on DAO related decisions and an ENS name for the DAO is registered.
+The template creates the new token according to the token parameters as defined in the contract and deploys a new DAO, initially assigning `CREATE_PERMISSIONS` and `APP_MANAGER` roles to itself. Subsequently the DAO apps are installed and initialized, tokens are minted and the apps' permissions are set up. Finally, the `CREATE_PERMISSIONS` and `APP_MANAGER` roles are transferred to the Voting application to allow the token holders to vote on DAO related decisions and an ENS name for the DAO is registered.
 
 This template is similar to `Reputation` and `Membership`. The main differences are:
 * `Reputation` does not allow token transfers.
@@ -316,11 +319,11 @@ The following illustration provides an overview of the high level setup steps fo
 
 <img width="400" alt="setup" src="./diagrams/membership_setup.png">
 
-The setup is basically similar to `Company` with the token not being transferable and every member receiving only one token. The `TOKEN_MAX_PER_ACCOUNT` setting ensures that the TokenHolders balance cannot exceed one token even after the initial minting during the DAO deployment.
+The setup is basically similar to `Company` with the token not being transferable and every member receiving only one token. The `TOKEN_MAX_PER_ACCOUNT` setting ensures that each token holder's balance cannot exceed one token even after the initial minting during the DAO deployment.
 
 This template is similar to `Company` and `Reputation`. The main differences are:
 * `Company` does allow token transfers.
-* `Reputation` allows members to have arbitrary stake.
+* `Reputation` allows members to have an arbitrary number of tokens.
 
 ##### Company-Board Template
 
@@ -328,18 +331,18 @@ The following illustration provides an overview of the high level setup steps fo
 
 <img width="400" alt="setup" src="./diagrams/company-board_setup.png">
 
-The DAO template is based on two major groups of actors. The **Board** represented by `BOARD` token holders, a membership token (non transferable, one per member) than can be used to vote in the board voting application and the **Shareholders** represented by `SHARE` token holders, a token that is transferable with no limit on how many tokens a token holder can possess that can be used to vote in the shareholder voting application.
+This template is based on two major groups of actors. The **Board** is represented by `BOARD` token holders, using a membership token (non transferable, one per member) that can be used to vote in the board voting application, and the **Shareholders** are represented by `SHARE` token holders, using a token that is transferable with no limit on how many tokens a token holder can possess that can be used to vote in the shareholder voting application.
 
-The DAO is set up by first creating the `BOARD` and `SHARE` tokens, then deploying the DAO while initially assigning `CREATE_PERMISSIONS` and `APP_MANAGER` roles to the template contract for further configuration. Subsequently the voting applications for `BOARD` and `SHARE` are installed and configured. Next the Vault and Finance applications are installed and initialized as well as the permissions are set-up accordingly. After setting up permissions Payroll is installed and permissions are set.
+The DAO is set up by first creating the `BOARD` and `SHARE` tokens, then deploying the DAO while initially assigning `CREATE_PERMISSIONS` and `APP_MANAGER` roles to the template contract for further configuration. Subsequently the voting applications for `BOARD` and `SHARE` are installed and configured. Next, the Vault and Finance applications are installed, initialized, and have their permissions set up acoordingly. After this, Payroll is installed and has its permissions set up before finalizing the rest of the permissions on the apps. Finally, the `CREATE_PERMISSIONS` and `APP_MANAGER` roles are transferred to the `Voting_BOARD` application to allow the `BOARD` to manage DAO related decisions and an ENS name for the DAO is registered.
 
-Shareholders via `Voting_SHARE` are set to own and manage most permissions in the system..
+Shareholders via `Voting_SHARE` are set to own and manage most permissions in the system.
 
 Board members are granted the following permissions via `Voting_BOARD`:
 * `APP_MANAGER`
 * `CREATE_PERMISSIONS`
 * All relevant payroll permissions (also being permission manager)
-* `Create`, `Manage` and `Execute` payments on Finance
-* `Execute` calls and `Run_Script` on Agent/Vault
+* `CREATE_PAYMENTS`, `MANAGE_PAYMENTS`, and `EXECUTE_PAYMENTS` on Finance
+* `EXECUTE` calls and `RUN_SCRIPT` on Agent/Vault
 
 ## 4 Key Observations/Recommendations
 
@@ -349,13 +352,13 @@ Board members are granted the following permissions via `Voting_BOARD`:
 
 * `Company`, `Membership` and `Reputation` unnecessarily duplicate code leading to minor discrepancies between the code-bases.
 
-* Some templates do not deploy a fully configured DAO (`Bare`; The `Finance` application in other templates).
+* Some templates do not deploy a fully configured DAO (`Bare`; the `Finance` application in other templates).
 
 * Trust assumptions for the `Bare` template highly depend on how the DAO configuration is finalized.
 
-* The `Bare` template optionally allows to deploy **one** application when creating a new instance. This functionality appears to be very limited and its usefulness is debatable unless it is only used for demonstration purposes, especially as the application will likely remain not fully configured for the DAO.
+* The `Bare` template optionally allows to deploy **one** application when creating a new instance. This functionality appears to be very limited and its usefulness is debatable unless it is only used for demonstration purposes, especially as the application will likely remain not fully configured.
 
-* The DAO-Templates similar to Aragon OS uses Solidity version `0.4.24` which is **not** in the latest major version branch of Solidity.
+* The DAO Templates, similar to aragonOS, uses Solidity version `0.4.24` which is **not** in the latest major version branch of Solidity.
 
 * Payroll has no permissions to create payments on Finance. `payday()` will therefore not be functional.
 
@@ -366,52 +369,52 @@ Board members are granted the following permissions via `Voting_BOARD`:
 
 ## 5 Security Specification
 
-This section describes, **from a security perspective**, the expected behavior of the system under audit. It is not a substitute for documentation. The purpose of this section is to identify specific security properties and encourage a discussion about security threats to - and trust assumptions of the system.
+This section describes, **from a security perspective**, the expected behavior of the system under audit. It is not a substitute for documentation. The purpose of this section is to identify specific security properties and encourage a discussion about security threats to - and trust assumptions of - the system.
 
-The DAO templates can be seen as blue-prints for common DAO scenarios. They initially specify the trust boundaries, actors and functionality provided, the standard applications involved and their configuration as well as the distribution of power that comprises the DAO intention. It is important to note that certain roles in a DAO allow modifications of the DAO after deployment, even when using a DAO template. This is especially true in the beginning of a DAO set-up where a smaller group of majority shareholders might have the power to change and decide on core attributes and functionality of the DAO. Deploying a DAO from an audited template is therefore no certification that a DAO is set-up correctly. Furthermore, DAO templates make use of a Repository to retrieve the address of the latest implementation of an application. This information can be updated at any point in time, asynchronous to the release of a new DAO template given an entity owns the necessary role and permissions to do so. Application implementations are therefore not in scope for this audit.
+The DAO Template contracts can be seen as blue-prints for common DAO scenarios. They initially specify the trust boundaries, actors and functionality provided, the standard applications involved and their configuration as well as the distribution of power that comprises the DAO's intended use case. It is important to note that certain roles in a DAO allow modifications of the DAO after deployment, even when using a DAO template. This is especially true in the beginning of a DAO's life where a smaller group of majority shareholders might have the power to change and decide on core attributes and functionality of the DAO. Deploying a DAO from an audited template is therefore no certification that a DAO is set-up correctly for later users. Furthermore, DAO templates make use of a on-chain repository to retrieve the address of the latest implementation of an application. This information can be updated at any point in time, asynchronous to the release of a new DAO template, given an entity owns the necessary role and permissions to do the repository update. Application implementations are therefore not in scope for this audit.
 
 
-### 5.1 DAO-Templates
+### 5.1 DAO Templates
 
-* The maintainer of a deployed dao template is in control of the application repository that is used with the template and therefore can update application implementations and front-run the DAO deployer which may result in an unexpected application being deployed.
+* The maintainer of a deployed DAO Template may be in control of the application repository that is used with the template and therefore may be able to update application implementations and front-run the DAO deployer, which may result in an unexpected application being deployed.
 
 * Forwarding functionality in various applications widens the general attack vectors of the system. At this time, no critical attack vectors have been identified.
 
-* Payroll provides a forwarding functionality for Employees that allows them to execute callscripts by default. The DAO's Finance application is implicitly black-listed by the Payroll application code, disallowing Employees from exploiting a potential `Payroll <--> Finance` trust relationship. Please refer to the Payroll audit for further observations, recommendations and discussions on the trust relationship.
+* `Payroll` provides forwarding functionality for Employees that allows them to execute CallScripts by default. The DAO's Finance application is implicitly black-listed by the `Payroll` application code during forwarding, disallowing Employees from exploiting a potential `Payroll <--> Finance` trust relationship. Please refer to the [Payroll audit](https://github.com/ConsenSys/aragon-payroll-audit-report-2019-06) for further observations, recommendations and discussions on the trust relationship.
 
-* Agent allows permission grantees (usually Voting) to run arbitrary callscripts by default or execute arbitrary calls with an ether value transfer.
+* `Agent` allows permission grantees (usually Voting) to run arbitrary CallScripts by default or execute arbitrary calls with an ether value transfer.
 
-* `TokenManager`s allow token holders to run arbitrary callscripts by default. This is usually used to create votes.
+* `TokenManager`s allow token holders to run arbitrary CallScripts by default. This is usually used to create votes. The managed `MiniMeToken` is implicitly black-listed by the `TokenManager` application during forwarding, disallowing token holders from exploiting a direct relationship to the token.
 
 * Forwarding functionality can generally be exploited to proxy calls to other contracts.
 
-* An `EVMScriptManager` permission grantee may add a backdoored or malicious script executor e.g. to bypass blacklisting restrictions in the default callscript executor or to execute arbitrary actions.
+* An `EVMScriptManager` permission grantee may add a backdoored or malicious script executor, e.g. to bypass blacklisting restrictions in the default `CallScript` executor or to execute arbitrary actions.
 
 * `Kernel.APP_MANAGER` permission grantee may install, modify or upgrade applications to bypass restrictions or undermine trust assumptions.
 
 * Voting systems are often the back-bone of the DAOs.
-  * In many cases TokenHolders or a special group of DAO members can create votes for benign looking actions that may execute malicious evmscripts in the end. It is therefore paramount for token-holders to verify that a vote's action (evmscript) actually reflects the vote's intention and does not perform any malicious activity. TokenHolders may also attempt to exploit flaws in off-chain applications (e.g. a web application) that are visualizing on-chain stored data like the voting metadata (html injection, presentation layer attacks based on utf8 encoding, ...) to trick stakeholders into voting in their favour.
-  * A misconfigured Voting application puts the complete DAO at risk. It is therefore important to re-verify after deployment that the Voting applications are actually configured for the intended Quorum and Support. Furthermore Quorum and Support must be chosen wisely for the intended DAO shareholder profile.
-  * The templates usually allow the token holders to create a vote that attempts to change the application's quorum or support. Any attempt to do so must be carefully reviewed by voters as choosing the wrong parameters for these settings might put the DAO at risk.
-  * Majority shareholders might overrule other TokenHolders in the system. Shareholders might collude or try to buy transferable tokens off exchanges to maximize their decision making power in the DAO with an intent to exploit it.
-  * Members might attempt to block the DAOs decision making by spamming the application with legitimate looking votes. A UI visualization of open votes may easily be overloaded or users might be tricked into participating in the wrong voting if they do not verify that they are participating in the vote they actually want to participate in (i.e. they only check the voting title and not the unique identifier).
+  * In many cases token holders or a special group of DAO members can create votes for benign looking actions that may execute malicious evmscripts in the end. It is therefore paramount for token holders to verify that a vote's action (`evmScript`) actually reflects the vote's intention and does not perform any malicious activity. Token holders may also attempt to exploit flaws in off-chain applications (e.g. a web application) that are visualizing on-chain stored data like the voting metadata (html injection, presentation layer attacks based on utf8 encoding, ...) to trick stakeholders into voting in their favour.
+  * A misconfigured `Voting` application puts the complete DAO at risk. It is therefore important to re-verify after deployment that the Voting applications are actually configured for the intended `quorum` and `support` parameters. Furthermore `quorum` and `support` must be chosen wisely for the intended DAO use case.
+  * The templates usually allow the token holders to create a vote that attempts to change the application's `quorum` or `support`. Any attempt to do so must be carefully reviewed by voters as choosing the wrong parameters for these settings might put the DAO at risk.
+  * Majority token holders might overrule other token holders in the system. Token holders might collude or try to buy transferable tokens off exchanges to maximize their decision making power in the DAO with an intent to exploit it.
+  * Members might attempt to block the DAOs' decision-making capability by spamming the application with legitimate looking votes. A UI visualization of open votes may easily be overloaded or users might be tricked into participating in the wrong voting if they do not verify that they are participating in the vote they actually want to participate in (i.e. they only check the voting title and not the unique identifier).
 
-* The DAO templates are initialized with components that may be operated by a 3rd party. When using pre-deployed dao-templates (e.g. deployed by the aragon foundation) the deployer implicitly trusts these entities. For example, the templates are usually initialized with an external `DAOFactory`, a `MiniMeTokenFactory` an `ENS` provider and a `IFIFSResolvingRegistrar`. Any of these components may act maliciously e.g. when bootstrapping a new DAO, creating a new Token for the DAO or when resolving the latest version of applications. Users of pre-deployed DAO templates therefore have to make sure that the template has been initialized by an entity they trust.
+* The DAO templates are initialized with components that may be operated by a 3rd party. When using pre-deployed DAO Template contracts (e.g. deployed by the Aragon Association) the deployer implicitly trusts these entities. For example, the templates are usually initialized with an external `DAOFactory`, a `MiniMeTokenFactory` an `ENS` provider, and a `IFIFSResolvingRegistrar`. Any of these components may act maliciously, e.g. when bootstrapping a new DAO, creating a new token for the DAO or when resolving the latest version of applications. Users of pre-deployed DAO Template contracts therefore have to make sure that the template has been initialized by an entity they trust.
 
-* Some templates allow to delegate permissions to individual entities that are not ruled by a MultiSig contract or Voting application. It should be noted that these entities may have critical permissions within the DAO, for example permissions that allow to indirectly harm the DAO e.g. by transferring funds from the Vault (`PayrollManager -> Payroll -> Finance -> Vault -> transfer salary`, `PriceFeed -> unfair exchange rate for employee or DAO -> transfer funds`). It is recommended to avoid assigning potentially harmful permissions to individuals as there is a possibility that they turn rogue or are taken over by a third-party to exploit the DAO. Safeguards must be implemented in order to avoid being exploited by third party oracles.
+* Some templates allow permissions to be delegated to individual entities that are not ruled by a MultiSig contract or Voting application. It should be noted that these entities may have critical permissions within the DAO, for example permissions that can indirectly cause harm to the DAO, e.g. by transferring funds from the Vault (`PayrollManager -> Payroll -> Finance -> Vault -> transfer salary`, `PriceFeed -> unfair exchange rate for employee or DAO -> transfer funds`). It is recommended to avoid assigning potentially harmful permissions to individuals as there is a possibility that they turn rogue or are taken over by a third-party to exploit the DAO. Safeguards must be implemented in order to avoid being exploited by third party oracles.
   * Individual permission owners should prove that they took proper action and implemented secure procedures for key management of their accounts.
 
 * Some of the DAOs generated by the templates under audit make use of what are described as "non-transferable tokens" or "memberships". In the current implementation, nothing prevents the control of such memberships being transferred or traded _if they are under the control of a proxy contract_.
 
   * For example, if membership is granted to an address `X` that has never sent a transaction, then nothing prevents the subsequent creation of a `BoardMember is Ownable` contract at address `X`. If `BoardMember` were to expose a `vote(...) public onlyOwner` function that proxies votes through to the DAO, then the supposedly non-transferable membership is under the control of the `BoardMember`'s current `owner`, and that ownership can be freely reassigned. Membership can therefore be transferred or even traded.
 
-  * Depending on the social-layer processes around membership allocation, this sort of theoretical transferability might be moot. (E.g. if all member addresses must have originated past transactions and are therefore known to be non-contracts).
+  * Depending on the social-layer processes around membership allocation, this sort of theoretical transferability might be moot (e.g. if all member addresses must have originated past transactions and are therefore known to be non-contracts).
 
   * If no such social-layer defense can be assumed to exist, then we note that the non-transferability property of memberships will not be guaranteed. In such circumstances, Aragon may wish to revisit any game theoretic dependencies that their DAOs have on non-transferability. If significant dependencies exist and cannot be eliminated, then Aragon may wish to take steps to exclude contract addresses (or could-become-a-contract addresses) from membership and from receipt of non-transferable tokens.
 
-* The DAO templates do not remain in direct control of the deployed DAOs and transfer ownership and permissions to either an individual or the DAO itself.
+* The DAO templates do not remain in direct control of the deployed DAOs and transfer ownership and all permissions of the DAO to either an individual or the DAO itself.
 
-The following sections describes the specific DAO-Templates security in more detail.
+The following sections describes each specific template's security in more detail.
 
 #### Bare Template
 
@@ -423,20 +426,20 @@ This template is not meant to be used in production. Not only for transparency i
 
 The relevant actors are as follows:
 
-* `DAO-Template maintainer` - deploys and configures the template contract. Is in control of factories used to deploy a new DAO.
-* `deployer` - interacts with the `bare` template to deploy a new DAO
+* `Template maintainer` - deploys and configures the template contract. Is in control of factories used to deploy a new DAO.
+* `deployer` - interacts with the `Bare` template to deploy a new DAO
 * `authorizedAddress` - an address that is being granted specific permissions on an application
 
 ##### Trust Model
 
-* `DAO-Template maintainer` is a trusted entity.
-* The trust model is very broad ay the `deployer` might install arbitrary apps with this template.
+* `Template maintainer` is a trusted entity.
+* The trust model is very broad as the `deployer` might install arbitrary apps with this template.
 * the DAO template does not remain in control of the newly deployed DAO
 * The `deployer` is in full control of every aspect of the DAO
 * The `deployer` remains in full control of the DAO even after it has been deployed
-* The `deployer` can create, grant and revoke any permission (`CREATE_PERMISSIONS_ROLE`, permission manager for Application permissions)
+* The `deployer` can create, grant and revoke any permission (`CREATE_PERMISSIONS_ROLE`, permission manager for application permissions)
 * The `deployer` is the designated manager of the DAO's applications (`APP_MANAGER`) and can therefore install or upgrade applications at any time.
-* The `authorizedAddress` is an account designated by the `deployer` that gets `deployer` specified permissions on an application that is initially created and linked to the DAO.
+* The `authorizedAddress` is an account designated by the `deployer` that is granted `deployer`-specified permissions on an application that is initially created and linked to the DAO.
 
 * This setup is highly centralized with all power being in the hands of the `deployer`.
 * This setup is not meant to be used as-is in production but rather as a starting point to build a custom DAO.
@@ -448,25 +451,25 @@ The relevant actors are as follows:
 
 ![setup](./diagrams/company_perms.png)
 
-The central trust anchor for this DAO template is the TokenHolder voting application. The DAO's shareholder token is transferable and the amount of stake an individual TokenHolder can have is unlimited. Tokens may also be traded on exchanges.
+The central trust anchor for this DAO template is the token holder voting application. The DAO's token is transferable and the amount of stake an individual address can have is unlimited. Tokens may also be transferred and traded on exchanges.
 
 ##### Actors
 
 The relevant actors are as follows:
 
-* `DAO-Template maintainer` -  deploys and configures the template contract. Is in control of factories used to deploy a new DAO.
-* `deployer` - interacts with the `company` template to deploy a new DAO
+* `Template maintainer` -  deploys and configures the template contract. Is in control of factories used to deploy a new DAO.
+* `deployer` - interacts with the `Company` template to deploy a new DAO
 * `TokenHolder` - are the main decision makers in the DAO. They can create and cast votes to perform actions with the DAO.
 * `Employee` - is an account set-up for payroll in the Payroll application.
-* `EmployeeManagerOrVoting` - is either the DAO Stakeholders represented by the voting application or a designated account in charge of managing employees and their salary.
+* `EmployeeManagerOrVoting` - is either the DAO's stakeholders represented by the voting application or a designated account in charge of managing employees and their salary.
 * `PriceFeedProvider` - Payroll price feed provider
 
 ##### Trust Model
 
 In any smart contract system, it's important to identify what trust is expected/required between various actors. For this audit, we established the following trust model:
 
-* `DAO-Template maintainer` is a trusted entity.
-* The `deployer` initially deploys the DAO and transfers all permissions to the voting application.
+* `Template maintainer` is a trusted entity.
+* The `deployer` initially deploys the DAO and transfers all permissions to the Voting application.
 * `Employees` can call arbitrary addresses via `Payroll.forward(evmscript)` (Finance is blacklisted)
 * `TokenHolder` can call arbitrary addresses via `TokenManager.forward(evmscript)` (e.g. in a malicious way in an attempt to cover their tracks when interacting with a third party contract)
 * `TokenHolder` can create an arbitrary number of votes via `TokenManager.forward(evmscript)` due to `TokenManager`'s permission on Voting to `Voting.CREATE_VOTE`.
@@ -475,13 +478,13 @@ In any smart contract system, it's important to identify what trust is expected/
 * `EmployeeManagerOrVoting` can drain funds from the Vault if Payroll would be set up correctly with Finance to execute immediate payments by adding an address as an employee, setting a salary that is high enough but still in the Finance period's budget (with enough funds in the vault) and having the employee interact with Payroll to pay out the salary.
 * `Employee` may use Payroll's forwarding functionality to proxy calls to arbitrary accounts in an attempt to hide potentially malicious activity.
 
-* The DAO business is run by `TokenHolder`'s via a central voting application.
-  * Key properties of the decision making process are the voting application's `support` and `quorum` settings. These settings must be aligned with the DAO's audience and number of `TokenHolder`'s. A combination of `quorum` and `support` that is set too low may leave the DAO vulnerable to minority shareholders, whereas setting `support` or `quorum` too high may render the DAO uncontrollable with votes being unable to pass (DoS).
-  * Majority `TokenHolder`'s might decide to abstain from voting to intentionally boycott votes due to required quorum not being reached (DoS).
-  * Especially in the beginning of the DAO, there may be increased risk of single entities becoming majority `TokenHolders` who might attempt to create and execute votes to exploit the DAO.
+* The "company" is run by `TokenHolder`s via a central voting application.
+  * Key properties of the decision making process are the voting application's `support` and `quorum` settings. These settings must be aligned with the DAO's audience and number of `TokenHolder`s. A combination of `quorum` and `support` that is set too low may leave the DAO vulnerable to minority shareholders, whereas setting `support` or `quorum` too high may render the DAO uncontrollable with votes being unable to pass (DoS).
+  * Majority `TokenHolder`s might decide to abstain from voting to intentionally boycott votes due to required `quorum` not being reached (DoS).
+  * Especially in the beginning of the DAO, there may be increased risk of single entities becoming majority `TokenHolder`s who might attempt to create and execute votes to exploit the DAO.
   * There is a risk of dead-stake where `TokenHolder` hold tokens but abstain from voting.
 * Both `Employees` and the DAO have to trust the `PriceFeedProvider` to receive fair exchange rates.
-* If Agent is used as the DAOs Vault, `TokenHolder`'s might decide to pass a vote that calls `Agent.execute` and transfer funds from the Vault bypassing the Finance application bookkeeping.
+* If Agent is used as the DAO's Vault, `TokenHolder`s might decide to pass a vote that calls `Agent.execute` and transfer funds from the Vault bypassing the Finance application's budgeting.
 
 * Payroll currently has no permissions on Finance to create payments. Employees therefore cannot call `payday` to receive their salary. It is important to make sure that Employees are not allowed to call Finance via `Payroll.forward(evmscript)` or else Payroll might be bypassed and funds might be lost.
 
@@ -491,70 +494,72 @@ In any smart contract system, it's important to identify what trust is expected/
 ![setup](./diagrams/reputation_perms.png)
 
 
-This template shares its security properties and actors with the `Company` template. The main difference is that tokens are not transferable and represent the members reputation in the DAO. Token amount per member is not limited. Any member can create votes in the system.
+This template shares its security properties and actors with the `Company` template. The main difference is that tokens are not transferable and represent each member's reputation in the DAO. Token amount per address is not limited. Any member can create votes in the DAO.
 
 #### Membership Template
 
 ![setup](./diagrams/membership_perms.png)
 
-This template shares its security properties and actors with the `Company` template. A main difference is that tokens are not transferable and DAO TokenHolders are limited to one token per holder. Every member's voice has the same weight in the voting application and any member can create votes.
+This template shares its security properties and actors with the `Company` template. A main difference is that tokens are not transferable and DAO token holders are limited to one token per address. Every member's voice has the same weight in the voting application and any member can create votes.
 
 
 ##### Company-Board Template
 
 ![setup](./diagrams/company-board_perms.png)
 
-This DAO template is based on split responsibilities where a Board of members steers the company and is allowed to perform certain DAO related actions on their own without having to ask shareholders governed by a Board member voting decision. The shareholders are a controlling instance. Only Board members are allowed to create votes to perform actions that are governed by the shareholders voting application. Shareholders cannot create their own votes and are purely reactive on whatever decision the Board might come up with.
-Board Tokens are basically membership tokens where every board member is limited to one token that is not transferable. Share token holders can hold any amount of tokens, freely transfer and exchange them similar to the `Company` template.
+This DAO template is based on split responsibilities where a Board steers the company and is allowed to perform certain DAO-related actions on their own (through Board-approved voting decisions) without having to ask shareholders. The shareholders are the controlling party for most actions but are purely reactionary to the Board as only the Board members are allowed to create new shareholder votes.
+
+Board tokens are basically membership tokens where every board member is limited to one token that is not transferable. Share token holders can hold any amount of tokens, freely transfer and exchange them similar to the `Company` template.
 
 ##### Actors
 
 The relevant actors are as follows:
 
-* `DAO-Template maintainer` -  deploys and configures the template contract. Is in control of factories used to deploy a new DAO.
+* `Template maintainer` -  deploys and configures the template contract. Is in control of factories used to deploy a new DAO.
 * `deployer` - interacts with the `company` template to deploy a new DAO.
-* `BOARD member` - steers the company.
-* `Shareholder` - are a controlling instance. they cannot initiate changes and completely rely on the `BOARD` to suggest changes.
+* `Boardmember` - individual members holding Board tokens
+* `BOARD` - `Boardmember`'s voting application that steers the company.
+* `Shareholder` - are the controlling party for most actions. They cannot initiate changes and completely rely on `Boardmember`s to suggest changes.
 * `Employee` - is an account set-up for payroll in the Payroll application.
-* `EmployeeManagerOrVotingBOARD` - is either the DAO Stakeholders represented by the voting application or a designated account in charge of managing employees and their salary.
+* `EmployeeManagerOrBoardVoting` - is either the DAO's boardmembers represented by their voting application or a designated account in charge of managing employees and their salary.
 * `PriceFeedProvider` - Payroll price feed provider.
 
 ##### Trust Model
 
 In any smart contract system, it's important to identify what trust is expected/required between various actors. For this audit, we established the following trust model:
 
-* `DAO-Template maintainer` is a trusted entity.
+* `Template maintainer` is a trusted entity.
 * The `deployer` initially deploys the DAO and transfers `APP_MANAGEMENT` and `CREATE_PERMISSION` permissions to the `BOARD` voting application.
   * Having `APP_MANAGEMENT` permissions that are only governed by the board while all other permissions are under control of shareholders might allow a malicious `BOARD` to update applications in order to completely bypass shareholders and take over the DAO.
-  * `CREATE_PERMISSON` allows a malicious `BOARD` to take ownership of unassigned and unburned permissions and potentially elevate their privileges bypassing shareholder control to take over the DAO. Please refer to the diagram for a list of un-assigned permissions.
+  * `CREATE_PERMISSON` allows a malicious `BOARD` to take ownership of unassigned and unburned permissions and potentially elevate their privileges, bypassing shareholder control to take over the DAO. Please refer to the diagram for a list of un-assigned permissions.
 
-* `BOARD members` are in charge of configuring the payroll application. `Board members` can transfer Payroll permissions without control from shareholders.
-* `BOARD members` define `EmployeeManagerOrVotingBOARD`.
-* `EmployeeManagerOrVotingBOARD` can drain funds from the Vault if Payroll would be set up correctly with Finance to execute immediate payments by adding an address as an employee, setting a salary that is high enough but still in the Finance periods budget (with enough funds in the vault) and having the employee interact with Payroll to pay out the salary.
+* `BOARD members` are in charge of configuring the Payroll application. `Board members` can transfer Payroll permissions without control from shareholders.
+* `BOARD members` define `EmployeeManagerOrBoardVoting`.
+* `EmployeeManagerOrBoardVoting` can drain funds from the Vault if Payroll would be set up correctly with Finance to execute immediate payments by adding an address as an employee, setting a salary that is high enough but still in the Finance periods budget (with enough funds in the vault) and having the employee interact with Payroll to pay out the salary.
 * `Employees` can call arbitrary addresses via `Payroll.forward(evmscript)` (Finance is blacklisted)
 * `Employee` may use Payrolls forwarding functionality to proxy calls to arbitrary accounts in an attempt to hide potentially malicious activity.
 * Both `Employees` and the DAO have to trust the `PriceFeedProvider` to receive fair exchange rates.
 * Payroll currently has no permissions on Finance to create payments. Employees therefore cannot call `payday` to receive their salary. It is important to make sure that Employees are not allowed to call Finance via `Payroll.forward(evmscript)` or otherwise Payroll might be bypassed and funds might be lost.
 
-* Each `BOARD member`'s voice has the same weight in votes.
-* `BOARD members` can call arbitrary addresses via `TokenManager_BOARD.forward(evmscript)` (e.g. in a malicious way in an attempt to cover their tracks when interacting with a third party contract)
-* `BOARD members` can create votes on the boards voting application.
-* `BOARD members` can create votes on the shareholders voting application.
-* `BOARD members` may also be shareholders in the DAO and therefore also have a stake in votes they propose to shareholders.
-* `BOARD members` may create a benign looking votes with a malicious script that is being executed when the vote passes (to trick other `BOARD members` or `Shareholders`).
-* `BOARD members` may propose to shareholders the addition of an unsafe EVMScriptExecutor that allows them to bypass shareholders.
-* `BOARD members` may drain funds from the vault bypassing finance by interacting with `Agent.forward()` or `Agent.execute()`.
-* `Shareholders` cannot intervene if everyone on the board is malicious as only the board member can propose changes.
-* `Shareholders` control `BOARD membership` by minting or burning tokens to accounts. However, their control is passive and can only be executed if a `BOARD member` proposes the addition or eviction of new `BOARD members`.
+* Each `Boardmember`'s voice has the same weight in votes.
+* `Boardmembers` can call arbitrary addresses via `TokenManager_BOARD.forward(evmscript)` (e.g. in a malicious way in an attempt to cover their tracks when interacting with a third party contract)
+* `Boardmembers` can create votes on the `BOARD`'s voting application.
+* `Boardmembers` can create votes on the `Shareholder`'s voting application.
+* `Boardmembers` may also be a `Shareholder` in the DAO and therefore also have a stake in votes they propose to `Shareholder`s.
+* `Boardmembers` may create a benign looking votes with a malicious script that is being executed when the vote passes (to trick other `Boardmembers` or `Shareholders`).
+* `Boardmembers` may propose to `Shareholder`s the addition of an unsafe `EVMScriptExecutor` that allows them to bypass `Shareholder`s.
+* `Boardmembers` may drain funds from the Vault bypassing Finance by interacting with `Agent.forward` or `Agent.execute`.
+* `Shareholders` cannot intervene if every `Boardmember` is malicious as only a `Boardmember` can propose changes.
+* `Shareholders` control `BOARD` membership by minting or burning tokens to accounts. However, their control is passive and can only be executed if a `BOARD member` proposes the addition or eviction of new `BOARD` members.
 
 * `Shareholders` can call arbitrary addresses via `TokenManager_Share.forward(evmscript)` (e.g. in a malicious way in an attempt to cover their tracks when interacting with a third party contract).
 * `Shareholders` can freely transfer, buy and sell tokens to increase their stake.
 * `Shareholders` cannot initiate votes.
 
 
-* The DAO business is run by `BOARD members`'s via a central voting application.
-  * Key properties of the decision making process are the voting applications `support` and `quorum` settings. These settings must be aligned with the DAO's audience and number of `BOARD members`'s. A combination of `quorum` and `support` that is set too low may leave the DAO vulnerable to minority shareholders and on the other hand setting `support` or `quorum` too high may render the DAO uncontrollable with votes being unable to pass (DoS).
-  * There is a risk of dead-stake where `BOARD members` hold tokens but abstain from votes.
+* The "company" is run by `Boardmember`s via a central voting application.
+  * Key properties of the decision making process are the voting applications' `support` and `quorum` settings. These settings must be aligned with the DAO's audience and number of `Boardmember`s. A combination of `quorum` and `support` that is set too low may leave the DAO vulnerable to minority `Shareholder`s and on the other hand setting `support` or `quorum` too high may render the DAO uncontrollable with votes being unable to pass (DoS).
+  * There is a risk of dead-stake where `Boardmember`s hold tokens but abstain from votes.
 
 
 #### Trust Template
@@ -592,9 +597,9 @@ The following table contains all the issues discovered during the audit, ordered
 
 #### Description
 
-The `company-board` template consists of two groups of decision makers, the `BOARD` members represented by the board Voting application and the `SHARE` token holders represented by the `SHARE` voting application. `BOARD` members are the only group allowed to create votings on the `SHARE` and `BOARD` voting applications. `SHARE` holders hold all of the permissions management roles in the DAO except for permissions in Payroll.
+The `Company-Board` template consists of two groups of decision makers, the `BOARD` members represented by the board Voting application and the `SHARE` token holders represented by the `SHARE` Voting application. `BOARD` members are the only group allowed to create votings on the `SHARE` and `BOARD` Voting applications. `SHARE` holders hold all of the permissions management roles in the DAO except for permissions in Payroll.
 
-When a new `company-board` based DAO is deployed core DAO permissions like `Kernel.APP_MANAGER` and `Acl.CREATE_PERMISSIONS` are assigned to the `BOARD` voting application with the permission manager being the `SHARE` voting application.
+When a new `company-board` based DAO is deployed, core DAO permissions like `Kernel.APP_MANAGER` and `Acl.CREATE_PERMISSIONS` are assigned to the `BOARD` Voting application with the permission manager being set to the `SHARE` Voting application.
 
 
 **code/templates/company-board/contracts/CompanyBoardTemplate.sol:L100-L100**
@@ -602,11 +607,11 @@ When a new `company-board` based DAO is deployed core DAO permissions like `Kern
 _transferRootPermissionsFromTemplateAndFinalizeDAO(dao, boardVoting, shareVoting);
 ```
 
-The `Kernel.APP_MANAGER` permissions allow the grantee to install new applications or upgrade existing ones. `BOARD` might use the upgrading functionality to upgrade existing applications and therefore work around limitations where the `BOARD` would actually require a passing vote from the shareholders.
+The `Kernel.APP_MANAGER` permissions allow the grantee to install new applications or upgrade existing ones. The board might use the upgrading functionality to upgrade existing applications and therefore work around limitations where the board would actually require a passing vote from the shareholders.
 
 #### Remediation
 
-`Kernel.APP_MANAGER` should be assigned to `VOTING_SHARE` to force `BOARD` members to go through a `SHARE` voting when managing applications. The assumption is that this allows shareholders to block potentially malicious behavior where the `BOARD` tries to undermine the shareholder trust relationship.
+`Kernel.APP_MANAGER` should be assigned to `Voting_SHARE` to force boardmembers to go through a vote in `Voting_SHARE` when managing applications. The assumption is that this allows shareholders to block potentially malicious behavior when the board tries to undermine the shareholder trust relationship.
 
 ---------------------
 
@@ -665,7 +670,7 @@ The specification should always reflect the trust model the DAO template is conf
 
 #### Description
 
-Shareholders have `EXECUTE_ROLE` and `RUN_SCRIPT_ROLE` roles in Agent application of Company-Board template.
+Shareholders have `EXECUTE_ROLE` and `RUN_SCRIPT_ROLE` roles in the Agent application of a DAO created from the `Company-Board` template.
 
 
 **code/templates/company-board/contracts/CompanyBoardTemplate.sol:L203-L210**
@@ -680,11 +685,11 @@ function _createCustomAgentPermissions(ACL _acl, Agent _agent, Voting _shareVoti
 }
 ```
 
-Company-Board template should have all the executive roles assigned to the board only and shareholders should be able to change the board or do the major changes to the system. 
+`Company-Board` DAO should have all the executive roles assigned to the board only and shareholders should be able to change the board or do the major changes to the system. 
 
 #### Remediation
 
-Remove `EXECUTE_ROLE` and `RUN_SCRIPT_ROLE` roles in Agent app from the shareholders (while preserving shareholders as the roles manager).
+Remove `EXECUTE_ROLE` and `RUN_SCRIPT_ROLE` roles in Agent app from the shareholders (while preserving shareholders as the role managers).
 
 ---------------------
 
@@ -696,7 +701,7 @@ Remove `EXECUTE_ROLE` and `RUN_SCRIPT_ROLE` roles in Agent app from the sharehol
 
 #### Description
 
-Current permission setup for the Finance application in Company-Board template has some inconsistency.
+Current permission setup for the Finance application in `Company-Board` template has some inconsistency.
 
 
 **code/templates/company-board/contracts/CompanyBoardTemplate.sol:L212-L220**
@@ -712,14 +717,14 @@ function _createCustomFinancePermissions(ACL _acl, Finance _finance, Voting _sha
 }
 ```
 
-Board members are allowed to schedule payments and make immediate payments, which give the board full control over the funds (they can create immediate payments to drain the Vault). Because of that, board members should also be able to execute their scheduled payments and cancel them.
+Board members are allowed to schedule payments and make immediate payments, which gives the board full control over the funds (they can create immediate payments to drain the Vault). Because of that, board members should also be able to execute their scheduled payments and cancel them.
 
 Additionally, shareholders are able to create, manage and execute payments which are the executive roles and should only be granted to the board.
 
 
 #### Remediation
 
-Let the board have the `CREATE_PAYMENTS_ROLE`, `EXECUTE_PAYMENTS_ROLE` and `MANAGE_PAYMENTS_ROLE` roles in Finance app and remove these roles from the shareholders (while preserving shareholders as the roles manager).
+Let the board have the `CREATE_PAYMENTS_ROLE`, `EXECUTE_PAYMENTS_ROLE` and `MANAGE_PAYMENTS_ROLE` roles in the Finance app and remove these roles from the shareholders (while preserving shareholders as the role managers).
 
 ---------------------
 
@@ -735,7 +740,7 @@ Employees will not be able to get their salary as Payroll does not have permissi
 
 #### Remediation
 
-Grant `CREATE_PAYMENT` permission on Finance for Payroll. Note even though Payroll allows employees to call evmscript, interaction with Finance via `forward()` is blacklisted.
+Grant `CREATE_PAYMENT` permission on Finance for Payroll. Note even though Payroll allows employees to call `evmScript`s, interaction with Finance via `forward()` is blacklisted.
 
 
 ---------------------
@@ -748,7 +753,7 @@ Grant `CREATE_PAYMENT` permission on Finance for Payroll. Note even though Payro
 
 #### Description
 
-Data location declaration is inconsistent within code that has been duplicated for templates that are very similar (e.g. `Company` - `Reputation`).
+Data location declaration is inconsistent within code that has been duplicated for templates that are very similar (e.g. `Company`, `Reputation`).
 
 
 **code/templates/reputation/contracts/ReputationTemplate.sol:L128-L128**
@@ -796,7 +801,7 @@ function newInstance(
 )
 ```
 
-same discrepancy for `company-board`, `membership`, `reputation`, `trust`
+Same discrepancy for `company-board`, `membership`, `reputation`, `trust`.
 
 #### Remediation
 
@@ -813,7 +818,7 @@ Make sure the code is reflecting the specification.
 
 #### Description
 
-Upon creating a new instance in all but the bare template the caller provides a name for the aragon dao called `aragonId` as argument `id`. This `id` is the name of the org used to register an ENS subdomain in the form of `[id].aragonid.eth`. An empty string for that `id` should not be allowed for registration and therefore checked before trying to register the dao's name.
+Upon creating a new instance in all but the `Bare` template, the caller provides an `id` argument to be registered for the org as an ENS subdomain in the form of `[id].aragonid.eth`. An empty string for `id` should not be allowed for registration and therefore checked before trying to register the ENS subdomain.
  
 
 **code/templates/company/contracts/CompanyTemplate.sol:L74-L90**
@@ -846,7 +851,7 @@ function _registerID(string memory _name, address _owner) internal {
 }
 ```
 
-An attempt to register an empty subdomain will subsequently fail in `FIFSResolvingRegistrar` of the `aragon-id` codebase because this will essentially try to register the name of the `rootNode`. However, it will fail only late in the DAO deployment process but should do so earlier. Also to be more consistent with the input validation checks that are already in place.
+An attempt to register an empty subdomain will subsequently fail in `FIFSResolvingRegistrar` of the `aragon-id` codebase because this will essentially try to register the name of the `rootNode`. However, it will fail only late in the DAO deployment process but should do so earlier. It will also be more consistent with the input validation checks that are already in place.
 
 
 **contracts/FIFSResolvingRegistrar.sol:L54-L57**
@@ -861,7 +866,7 @@ function registerWithResolver(bytes32 _subnode, address _owner, IPublicResolver 
 
 #### Remediation
 
-Make sure a valid id was provided e.g. by adding the following check: `require(bytes(id).length > 0, ID_FOR_DAO_REQUIRED)`
+Make sure a valid id was provided, e.g. by adding the following check: `require(bytes(id).length > 0, ID_FOR_DAO_REQUIRED)`.
 
 We suggest to implement the same check in `FIFSResolvingRegistrar` to disallow registration of empty subdomains. 
 
